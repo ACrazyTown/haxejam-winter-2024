@@ -1,2 +1,3 @@
 .haxelib/
 export/
+.DS_Store
