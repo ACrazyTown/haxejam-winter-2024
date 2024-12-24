@@ -1,5 +1,6 @@
 package states;
 
+import ui.Mouse;
 import flixel.FlxSprite;
 import flixel.text.FlxText;
 import flixel.FlxG;
@@ -44,6 +45,8 @@ class Startup extends FlxState
     {
         FlxG.fixedTimestep = false;
         FlxSprite.defaultAntialiasing = true;
+
+        Mouse.setState(NORMAL);
     }
 
     function done():Void
