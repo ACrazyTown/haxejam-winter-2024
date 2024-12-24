@@ -17,6 +17,8 @@ class MenuState extends FlxState
 
 	override public function create()
 	{
+        super.create();
+
 		bg = new FlxSprite(0, 0);
 		bg.loadGraphic("assets/images/ui/menu_bg.png");
 		add(bg);
@@ -35,8 +37,6 @@ class MenuState extends FlxState
 		swipe.loadGraphic("assets/images/ui/start_screen_swipe.png");
 		add(swipe);
 
-		super.create();
-
 		FlxTween.tween(fg, {x: 0}, 1, {ease: FlxEase.cubeOut});
 		FlxTween.tween(playButton, {x: 650}, 1, {ease: FlxEase.cubeOut});
 	}
@@ -49,7 +49,11 @@ class MenuState extends FlxState
 	function playBtnOnMouseUp(playButton:FlxSprite)
 	{
 		if (mouseWasDownOnPlayBtn)
-			clickPlay();
+		{
+			FlxTween.tween(swipe, {x: -520}, 1, {ease: FlxEase.cubeOut, onComplete: 
+                (_) -> FlxG.switchState(new PlayState())
+            });
+        }
 	}
 
 	function playBtnOnMouseOver(playButton:FlxSprite)
@@ -63,20 +67,5 @@ class MenuState extends FlxState
 		mouseWasDownOnPlayBtn = false;
 		FlxTween.angle(playButton, -10, 0, 0.25, {ease: FlxEase.cubeOut});
 		FlxTween.tween(playButton, {"scale.x": 1, "scale.y": 1}, 0.25, {ease: FlxEase.cubeOut});
-	}
-
-	function clickPlay()
-	{
-		FlxTween.tween(swipe, {x: -520}, 1, {ease: FlxEase.cubeOut, onComplete: switchToGame});
-	}
-
-	function switchToGame(_)
-	{
-		FlxG.switchState(new PlayState());
-	}
-
-	override public function update(elapsed:Float)
-	{
-		super.update(elapsed);
 	}
 }
