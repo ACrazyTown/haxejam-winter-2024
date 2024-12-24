@@ -1,5 +1,6 @@
 package states;
 
+import flixel.FlxSprite;
 import flixel.text.FlxText;
 import flixel.FlxG;
 import flixel.FlxState;
@@ -41,7 +42,8 @@ class Startup extends FlxState
 
     function init():Void
     {
-
+        FlxG.fixedTimestep = false;
+        FlxSprite.defaultAntialiasing = true;
     }
 
     function done():Void
