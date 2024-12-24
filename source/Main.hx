@@ -8,11 +8,11 @@ import states.Startup;
 
 class Main extends Sprite
 {
-	public static var initialState:Class<FlxState> = MenuState;
+    public static var initialState:Class<FlxState> = MenuState;
 
-	public function new()
-	{
-		super();
-		addChild(new FlxGame(0, 0, Startup));
-	}
+    public function new()
+    {
+        super();
+        addChild(new FlxGame(0, 0, Startup));
+    }
 }
