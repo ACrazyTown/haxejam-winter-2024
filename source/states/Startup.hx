@@ -45,6 +45,7 @@ class Startup extends FlxState
     {
         FlxG.fixedTimestep = false;
         FlxSprite.defaultAntialiasing = true;
+        FlxG.mouse.visible = true;
 
         Mouse.setState(NORMAL);
     }
