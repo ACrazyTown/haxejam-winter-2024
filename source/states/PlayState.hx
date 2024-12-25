@@ -20,8 +20,6 @@ class PlayState extends FlxState
     var curHoldingOffsetX:Float = 0;
     var curHoldingOffsetY:Float = 0;
 
-	var introFadeSprite:FlxSprite;
-
     var concept:FlxSprite;
 
     var curFish:Fish;
@@ -59,12 +57,13 @@ class PlayState extends FlxState
         add(clock);
 
         interactableObjects.reverse();
-		introFadeSprite = new FlxSprite(0, 0);
+
+		var introFadeSprite = new FlxSprite(0, 0);
 		introFadeSprite.makeGraphic(1280, 720, FlxColor.BLACK);
 		add(introFadeSprite);
-
 		FlxG.camera.zoom = 1.2;
-		playIntro();
+        FlxTween.tween(FlxG.camera, {zoom: 1}, 2, {ease: FlxEase.cubeOut});
+		FlxTween.color(introFadeSprite, 2, FlxColor.BLACK, FlxColor.TRANSPARENT, {ease: FlxEase.cubeOut});
     }
 
     var clickable:Bool = false;
@@ -114,9 +113,4 @@ class PlayState extends FlxState
         add(obj);
         interactableObjects.push(obj);
     }
-	function playIntro()
-	{
-		FlxTween.tween(FlxG.camera, {zoom: 1}, 2, {ease: FlxEase.cubeOut});
-		FlxTween.color(introFadeSprite, 2, FlxColor.BLACK, FlxColor.TRANSPARENT, {ease: FlxEase.cubeOut});
-	}
 }
