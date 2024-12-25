@@ -11,6 +11,7 @@ import flixel.util.FlxColor;
 import props.Fish;
 import props.Stamp;
 import ui.Mouse;
+import game.Constants;
 
 class PlayState extends FlxState
 {
@@ -23,19 +24,26 @@ class PlayState extends FlxState
     var concept:FlxSprite;
 
     var curFish:Fish;
+
     var clock:FlxRadialGauge;
 
     var stampAccept:Stamp;
     var stampDeny:Stamp;
     public var stamps:FlxTypedGroup<FlxSprite>;
 
-    var interactableObjects:Array<FlxSprite>;
+    var draggableObjects:Array<FlxSprite>;
+
+    // gameplay logic
+    var inspecting:Bool = false;
+    var maxTime:Float;
+    var curTime:Float;
+    var penaltiesReceived:Int;
 
     override public function create()
     {
         instance = this;
         super.create();
-        interactableObjects = [];
+        draggableObjects = [];
 
         concept = new FlxSprite(0, 0).loadGraphic("assets/images/deskconcept.png");
         add(concept);
@@ -56,7 +64,7 @@ class PlayState extends FlxState
         clock.makeShapeGraphic(CIRCLE, 50, 0, FlxColor.BLACK);
         add(clock);
 
-        interactableObjects.reverse();
+        draggableObjects.reverse();
 
 		var introFadeSprite = new FlxSprite(0, 0);
 		introFadeSprite.makeGraphic(1280, 720, FlxColor.BLACK);
@@ -64,14 +72,16 @@ class PlayState extends FlxState
 		FlxG.camera.zoom = 1.2;
         FlxTween.tween(FlxG.camera, {zoom: 1}, 2, {ease: FlxEase.cubeOut});
 		FlxTween.color(introFadeSprite, 2, FlxColor.BLACK, FlxColor.TRANSPARENT, {ease: FlxEase.cubeOut});
+
+        startInspection();
     }
 
     var clickable:Bool = false;
-    override public function update(elapsed:Float)
+    override public function update(elapsed:Float):Void
     {
         super.update(elapsed);
 
-        for (obj in interactableObjects)
+        for (obj in draggableObjects)
         {
             if (!clickable)
                 clickable = FlxG.mouse.overlaps(obj);
@@ -80,6 +90,18 @@ class PlayState extends FlxState
 
         Mouse.setState(clickable ? CLICKABLE : NORMAL);
         clickable = false;
+
+        if (inspecting)
+        {
+            curTime += elapsed;
+            clock.amount = 1 - (curTime / maxTime);
+
+            if (curTime > maxTime)
+            {
+                penalty();
+                // TODO: reset time? 
+            }
+        }
     }
 
     function handleMouse(obj:FlxSprite):Void
@@ -111,6 +133,30 @@ class PlayState extends FlxState
     function addInteractable(obj:FlxSprite):Void
     {
         add(obj);
-        interactableObjects.push(obj);
+        draggableObjects.push(obj);
+    }
+
+    function startInspection():Void
+    {
+        // TODO: randomize
+        maxTime = 120;
+        curTime = 0;
+        inspecting = true;
+    }
+
+    function penalty():Void
+    {
+        penaltiesReceived++;
+        if (penaltiesReceived > Constants.MAX_PENALTIES)
+        {
+            gameover();
+        }
+
+        // todo: phone sms
+    }
+
+    function gameover():Void
+    {
+        trace("bruh u so stupid");
     }
 }
