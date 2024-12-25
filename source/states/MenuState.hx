@@ -1,5 +1,6 @@
 package states;
 
+import ui.Mouse;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
@@ -62,12 +63,14 @@ class MenuState extends FlxState
 
     function playBtnOnMouseOver(playButton:FlxSprite)
     {
+        Mouse.setState(CLICKABLE);
         FlxTween.angle(playButton, 0, -10, 0.25, {ease: FlxEase.cubeOut});
         FlxTween.tween(playButton, {"scale.x": 1.2, "scale.y": 1.2}, 0.25, {ease: FlxEase.cubeOut});
     }
 
     function playBtnOnMouseOut(playButton:FlxSprite)
     {
+        Mouse.setState(NORMAL);
         mouseWasDownOnPlayBtn = false;
         FlxTween.angle(playButton, -10, 0, 0.25, {ease: FlxEase.cubeOut});
         FlxTween.tween(playButton, {"scale.x": 1, "scale.y": 1}, 0.25, {ease: FlxEase.cubeOut});
