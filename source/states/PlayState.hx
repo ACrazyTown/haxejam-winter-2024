@@ -244,8 +244,8 @@ class PlayState extends FlxState
         FlxTween.tween(
             t_popups,
             {"scale.x": 1, "scale.y": 1},
-            1,
-            {ease: FlxEase.bounceOut, onComplete: (_) -> {t_canSwitchPopup = true;}}
+            0.5,
+            {ease: FlxEase.cubeInOut, onComplete: (_) -> {t_canSwitchPopup = true;}}
         );
     }
 
