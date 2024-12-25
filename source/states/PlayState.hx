@@ -55,10 +55,10 @@ class PlayState extends FlxState
         add(stamps);
 
         stampAccept = new Stamp(162, 588, true);
-        addInteractable(stampAccept);
+        addDraggable(stampAccept);
 
         stampDeny = new Stamp(stampAccept.x + stampAccept.width, stampAccept.y, false);
-        addInteractable(stampDeny);
+        addDraggable(stampDeny);
 
         clock = new FlxRadialGauge(0, 0);
         clock.makeShapeGraphic(CIRCLE, 50, 0, FlxColor.BLACK);
@@ -130,7 +130,7 @@ class PlayState extends FlxState
         }
     }
 
-    function addInteractable(obj:FlxSprite):Void
+    function addDraggable(obj:FlxSprite):Void
     {
         add(obj);
         draggableObjects.push(obj);
