@@ -8,7 +8,7 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
-import props.Fish;
+import props.fish.Fish;
 import props.Stamp;
 import ui.Mouse;
 import game.Constants;
@@ -48,7 +48,7 @@ class PlayState extends FlxState
         concept = new FlxSprite(0, 0).loadGraphic("assets/images/deskconcept.png");
         add(concept);
 
-        curFish = new Fish(229, 194);
+        curFish = new Fish(229, 194, null);
         add(curFish);
 
         stamps = new FlxTypedGroup<FlxSprite>();
@@ -66,12 +66,12 @@ class PlayState extends FlxState
 
         draggableObjects.reverse();
 
-		var introFadeSprite = new FlxSprite(0, 0);
-		introFadeSprite.makeGraphic(1280, 720, FlxColor.BLACK);
-		add(introFadeSprite);
-		FlxG.camera.zoom = 1.2;
+        var introFadeSprite = new FlxSprite(0, 0);
+        introFadeSprite.makeGraphic(1280, 720, FlxColor.BLACK);
+        add(introFadeSprite);
+        FlxG.camera.zoom = 1.2;
         FlxTween.tween(FlxG.camera, {zoom: 1}, 2, {ease: FlxEase.cubeOut});
-		FlxTween.color(introFadeSprite, 2, FlxColor.BLACK, FlxColor.TRANSPARENT, {ease: FlxEase.cubeOut});
+        FlxTween.color(introFadeSprite, 2, FlxColor.BLACK, FlxColor.TRANSPARENT, {ease: FlxEase.cubeOut});
 
         startInspection();
     }

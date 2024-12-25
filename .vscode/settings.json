@@ -8,10 +8,10 @@
 		"editor.formatOnPaste": false,
 		"editor.codeActionsOnSave": {
 			"source.sortImports": "explicit"
-		}
+		},
+		"editor.tabSize": 4,
+		"editor.insertSpaces": true,
+		"editor.detectIndentation": false
 	},
 	"haxe.enableExtendedIndentation": true,
-	"editor.tabSize": 4,
-	"editor.insertSpaces": true,
-	"editor.detectIndentation": false
 }
