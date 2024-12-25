@@ -8,10 +8,11 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
-import props.fish.Fish;
-import props.Stamp;
-import ui.Mouse;
 import game.Constants;
+import props.Stamp;
+import props.fish.Fish;
+import states.substate.TutorialSubstate;
+import ui.Mouse;
 
 class PlayState extends FlxState
 {
@@ -32,6 +33,8 @@ class PlayState extends FlxState
     public var stamps:FlxTypedGroup<FlxSprite>;
 
     var draggableObjects:Array<FlxSprite>;
+
+    public var dimOverlay:FlxSprite;
 
     // gameplay logic
     var inspecting:Bool = false;
@@ -66,14 +69,26 @@ class PlayState extends FlxState
 
         draggableObjects.reverse();
 
-        var introFadeSprite = new FlxSprite(0, 0);
-        introFadeSprite.makeGraphic(1280, 720, FlxColor.BLACK);
-        add(introFadeSprite);
+        // startTutorial();
+        // startInspection();
+
+        dimOverlay = new FlxSprite(0, 0);
+        dimOverlay.makeGraphic(1280, 720, FlxColor.BLACK);
+        add(dimOverlay);
         FlxG.camera.zoom = 1.2;
         FlxTween.tween(FlxG.camera, {zoom: 1}, 2, {ease: FlxEase.cubeOut});
-        FlxTween.color(introFadeSprite, 2, FlxColor.BLACK, FlxColor.TRANSPARENT, {ease: FlxEase.cubeOut});
-
-        startInspection();
+        FlxTween.color(dimOverlay, 1, FlxColor.BLACK, FlxColor.fromRGB(0, 0, 0, 100), 
+            {
+                ease: FlxEase.cubeOut,
+                onComplete: (_) -> 
+                {
+                    // TODO: Check if tutorial not seen
+                    var needsTutorial:Bool = #if PLAY false #else true #end;
+                    if (needsTutorial)
+                        openSubState(new TutorialSubstate(onIntroComplete));
+                }
+            }
+        );
     }
 
     var clickable:Bool = false;
@@ -159,4 +174,10 @@ class PlayState extends FlxState
     {
         trace("bruh u so stupid");
     }
+
+    function onIntroComplete():Void 
+    {
+        startInspection();
+    }
+
 }
