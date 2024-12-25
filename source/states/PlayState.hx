@@ -8,10 +8,11 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
-import props.fish.Fish;
-import props.Stamp;
-import ui.Mouse;
 import game.Constants;
+import props.Stamp;
+import props.fish.Fish;
+import states.substate.TutorialSubstate;
+import ui.Mouse;
 
 class PlayState extends FlxState
 {
@@ -20,15 +21,6 @@ class PlayState extends FlxState
     public var curHolding:FlxSprite;
     var curHoldingOffsetX:Float = 0;
     var curHoldingOffsetY:Float = 0;
-
-    static inline var t_popupPath:String = "assets/images/ui/tutorial/popup-";
-    static inline var t_popupAmt:Int = 11;
-    var t_dimOverlay:FlxSprite;
-    var t_pressPrompt:FlxSprite;
-    var t_popups:FlxSprite;
-    var t_currPopup:Int = 1;
-    var t_inProgress:Bool = false;
-    var t_canSwitchPopup:Bool = false;
 
     var concept:FlxSprite;
 
@@ -41,6 +33,8 @@ class PlayState extends FlxState
     public var stamps:FlxTypedGroup<FlxSprite>;
 
     var draggableObjects:Array<FlxSprite>;
+
+	public var dimOverlay:FlxSprite;
 
     // gameplay logic
     var inspecting:Bool = false;
@@ -75,34 +69,32 @@ class PlayState extends FlxState
 
         draggableObjects.reverse();
 
-        t_dimOverlay = new FlxSprite(0, 0);
-        t_dimOverlay.makeGraphic(1280, 720, FlxColor.BLACK);
-        add(t_dimOverlay);
+		// startTutorial();
+		// startInspection();
+
+        dimOverlay = new FlxSprite(0, 0);
+        dimOverlay.makeGraphic(1280, 720, FlxColor.BLACK);
+        add(dimOverlay);
         FlxG.camera.zoom = 1.2;
         FlxTween.tween(FlxG.camera, {zoom: 1}, 2, {ease: FlxEase.cubeOut});
-        FlxTween.color(
-            t_dimOverlay,
-            1,
-            FlxColor.BLACK,
-            FlxColor.fromRGB(0, 0, 0, 100),
-            {ease: FlxEase.cubeOut, onComplete: startTutorial}
-        );
-
-        // startTutorial();
-        // startInspection();
+		FlxTween.color(dimOverlay, 1, FlxColor.BLACK, FlxColor.fromRGB(0, 0, 0, 100), 
+            {
+                ease: FlxEase.cubeOut,
+                onComplete: (_) -> 
+                {
+                    // TODO: Check if tutorial not seen
+                    var needsTutorial:Bool = #if PLAY false #else true #end;
+                    if (needsTutorial)
+                        openSubState(new TutorialSubstate(onIntroComplete));
+                }
+            }
+		);
     }
 
     var clickable:Bool = false;
     override public function update(elapsed:Float):Void
     {
         super.update(elapsed);
-
-        if (t_inProgress)
-        {
-            if (t_canSwitchPopup && FlxG.mouse.justPressed)
-                switchTPopup();
-            return;
-        }
 
         for (obj in draggableObjects)
         {
@@ -153,109 +145,13 @@ class PlayState extends FlxState
         }
     }
 
-    function getCurrPopupPath()
-    {
-        var middle = Std.string(t_currPopup);
-        if (t_currPopup < 10)
-            middle = "0" + middle;
-
-        return t_popupPath + middle + ".png";
-    }
-
-    function startTutorial(_)
-    {
-        t_inProgress = true;
-
-        t_pressPrompt = new FlxSprite(-541, 573);
-        t_pressPrompt.loadGraphic("assets/images/ui/tutorial/press.png");
-        add(t_pressPrompt);
-
-        FlxTween.tween(t_pressPrompt, {x: 0}, 1, {ease: FlxEase.cubeOut});
-
-        t_popups = new FlxSprite(0, 0);
-        t_popups.loadGraphic(getCurrPopupPath());
-        t_popups.scale.set(0, 0);
-        add(t_popups);
-
-        animatePopup();
-    }
-
-    function switchTPopup()
-    {
-        t_canSwitchPopup = false;
-
-        if (t_currPopup == t_popupAmt)
-        {
-            t_inProgress = false;
-
-            FlxTween.tween(
-                t_popups,
-                {"scale.x": 0, "scale.y": 0},
-                1,
-                {
-                    ease: FlxEase.cubeIn,
-                    onComplete: (_) -> {
-                        FlxTween.color(
-                            t_dimOverlay,
-                            1,
-                            FlxColor.fromRGB(0, 0, 0, 100),
-                            FlxColor.TRANSPARENT,
-                            {ease: FlxEase.cubeOut, onComplete: startInspection}
-                        );
-
-                        FlxTween.tween(t_pressPrompt, {x: -541}, 1, {ease: FlxEase.cubeOut});
-                    }
-                }
-            );
-        }
-        else
-        {
-            if (t_currPopup == 1)
-            {
-                FlxTween.color(
-                    t_dimOverlay,
-                    1,
-                    FlxColor.fromRGB(0, 0, 0, 100),
-                    FlxColor.TRANSPARENT,
-                    {ease: FlxEase.cubeOut}
-                );
-            }
-            else if (t_currPopup == t_popupAmt - 1)
-            {
-                FlxTween.color(
-                    t_dimOverlay,
-                    1,
-                    FlxColor.TRANSPARENT,
-                    FlxColor.fromRGB(0, 0, 0, 100),
-                    {ease: FlxEase.cubeOut}
-                );
-            }
-
-            t_currPopup++;
-            t_popups.scale.set(0, 0);
-            t_popups.loadGraphic(getCurrPopupPath());
-    
-            animatePopup();
-        }
-    }
-
-    function animatePopup()
-    {
-        FlxTween.tween(
-            t_popups,
-            {"scale.x": 1, "scale.y": 1},
-            0.5,
-            {ease: FlxEase.cubeInOut, onComplete: (_) -> {t_canSwitchPopup = true;}}
-        );
-    }
-
     function addInteractable(obj:FlxSprite):Void
     {
         add(obj);
         draggableObjects.push(obj);
     }
 
-    function startInspection(_):Void
+    function startInspection():Void
     {
         // TODO: randomize
         maxTime = 120;
@@ -278,4 +174,10 @@ class PlayState extends FlxState
     {
         trace("bruh u so stupid");
     }
+
+	function onIntroComplete():Void 
+    {
+        startInspection();
+    }
+
 }
