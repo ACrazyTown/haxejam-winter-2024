@@ -126,5 +126,6 @@ class TutorialSubstate extends FlxSubState
     {
         // TODO: Save tutorial as seen
         close();
+        onComplete();
     }
 }
