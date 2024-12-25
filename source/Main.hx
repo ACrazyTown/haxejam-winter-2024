@@ -15,5 +15,13 @@ class Main extends Sprite
     {
         super();
         addChild(new FlxGame(0, 0, Startup));
+
+        // prevent right click context menu
+        #if js
+        stage.window.element.addEventListener("contextmenu", (e) ->
+        {
+            e.preventDefault();
+        });
+        #end
     }
 }
