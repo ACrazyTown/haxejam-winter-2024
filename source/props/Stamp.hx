@@ -1,5 +1,6 @@
 package props;
 
+import util.MathUtil;
 import states.PlayState;
 import flixel.FlxG;
 import flixel.util.FlxColor;
@@ -22,6 +23,9 @@ class Stamp extends FlxSprite
 
         if (PlayState.instance.curHolding == this && FlxG.mouse.justPressedRight)
         {
+            var sound = FlxG.sound.play("assets/sounds/stamp");
+            sound.pitch = MathUtil.eerp(0.95, 1.05);
+
             var stamp:FlxSprite = new FlxSprite(this.x, this.y, stampGraphic);
             PlayState.instance.stamps.add(stamp);
         }

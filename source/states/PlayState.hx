@@ -1,5 +1,7 @@
 package states;
 
+import util.MathUtil;
+import flixel.math.FlxRect;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
@@ -38,9 +40,11 @@ class PlayState extends FlxState
 
     // gameplay logic
     var inspecting:Bool = false;
+    var totalTime:Float;
     var maxTime:Float;
     var curTime:Float;
     var penaltiesReceived:Int;
+    var score:Float;
 
     override public function create()
     {
@@ -52,6 +56,7 @@ class PlayState extends FlxState
         add(concept);
 
         curFish = new Fish(229, 194, null);
+        curFish.visible = false;
         add(curFish);
 
         stamps = new FlxTypedGroup<FlxSprite>();
@@ -72,42 +77,49 @@ class PlayState extends FlxState
         // startTutorial();
         // startInspection();
 
+        // TODO: Check if tutorial not seen
+        var needsTutorial:Bool = #if PLAY false #else true #end;
+
         dimOverlay = new FlxSprite(0, 0);
         dimOverlay.makeGraphic(1280, 720, FlxColor.BLACK);
         add(dimOverlay);
         FlxG.camera.zoom = 1.2;
         FlxTween.tween(FlxG.camera, {zoom: 1}, 2, {ease: FlxEase.cubeOut});
-        FlxTween.color(dimOverlay, 1, FlxColor.BLACK, FlxColor.fromRGB(0, 0, 0, 100), 
+        FlxTween.color(dimOverlay, 1, FlxColor.BLACK, needsTutorial ? FlxColor.fromRGB(0, 0, 0, 100) : 0, 
             {
                 ease: FlxEase.cubeOut,
                 onComplete: (_) -> 
                 {
-                    // TODO: Check if tutorial not seen
-                    var needsTutorial:Bool = #if PLAY false #else true #end;
                     if (needsTutorial)
                         openSubState(new TutorialSubstate(onIntroComplete));
+                    else
+                        onIntroComplete();
                 }
             }
         );
     }
 
+    var interactionsAllowed:Bool = false;
     var clickable:Bool = false;
     override public function update(elapsed:Float):Void
     {
         super.update(elapsed);
 
-        for (obj in draggableObjects)
+        if (interactionsAllowed)
         {
-            if (!clickable)
-                clickable = FlxG.mouse.overlaps(obj);
-            handleMouse(obj);
+            for (obj in draggableObjects)
+            {
+                if (!clickable)
+                    clickable = FlxG.mouse.overlaps(obj);
+                handleMouse(obj);
+            }
         }
 
         Mouse.setState(clickable ? CLICKABLE : NORMAL);
         clickable = false;
-
         if (inspecting)
         {
+            totalTime += elapsed;
             curTime += elapsed;
             clock.amount = 1 - (curTime / maxTime);
 
@@ -154,14 +166,28 @@ class PlayState extends FlxState
     function startInspection():Void
     {
         // TODO: randomize
-        maxTime = 120;
+        interactionsAllowed = false;
+        maxTime = 180;
         curTime = 0;
-        inspecting = true;
+
+        // TODO: Get randomized fish data here
+        curFish.loadFromData(null);
+        curFish.y = -curFish.height;
+        var centerPos = MathUtil.centerToArea(FlxRect.get(0, 0, curFish.width, curFish.height), FlxRect.get(200, 110, 520, 420), XY);
+
+        curFish.visible = true;
+        FlxTween.tween(curFish, {y: centerPos.y}, 2, {ease: FlxEase.cubeInOut, onComplete: (_) ->
+        {
+            inspecting = true;
+            interactionsAllowed = true;
+        }});
     }
 
     function penalty():Void
     {
         penaltiesReceived++;
+        score += Constants.SCORE_PENALTY;
+
         if (penaltiesReceived > Constants.MAX_PENALTIES)
         {
             gameover();
@@ -172,6 +198,8 @@ class PlayState extends FlxState
 
     function gameover():Void
     {
+        inspecting = false;
+
         trace("bruh u so stupid");
     }
 
