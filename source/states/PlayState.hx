@@ -1,16 +1,16 @@
 package states;
 
-import hscript.Macro;
-import ui.Mouse;
-import flixel.FlxObject;
-import flixel.group.FlxGroup.FlxTypedGroup;
-import props.Stamp;
-import flixel.util.FlxColor;
-import flixel.addons.display.FlxRadialGauge;
-import flixel.FlxSprite;
 import flixel.FlxG;
+import flixel.FlxSprite;
 import flixel.FlxState;
+import flixel.addons.display.FlxRadialGauge;
+import flixel.group.FlxGroup.FlxTypedGroup;
+import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
+import flixel.util.FlxColor;
 import props.Fish;
+import props.Stamp;
+import ui.Mouse;
 
 class PlayState extends FlxState
 {
@@ -19,6 +19,8 @@ class PlayState extends FlxState
     public var curHolding:FlxSprite;
     var curHoldingOffsetX:Float = 0;
     var curHoldingOffsetY:Float = 0;
+
+	var introFadeSprite:FlxSprite;
 
     var concept:FlxSprite;
 
@@ -57,6 +59,12 @@ class PlayState extends FlxState
         add(clock);
 
         interactableObjects.reverse();
+		introFadeSprite = new FlxSprite(0, 0);
+		introFadeSprite.makeGraphic(1280, 720, FlxColor.BLACK);
+		add(introFadeSprite);
+
+		FlxG.camera.zoom = 1.2;
+		playIntro();
     }
 
     var clickable:Bool = false;
@@ -106,4 +114,9 @@ class PlayState extends FlxState
         add(obj);
         interactableObjects.push(obj);
     }
+	function playIntro()
+	{
+		FlxTween.tween(FlxG.camera, {zoom: 1}, 2, {ease: FlxEase.cubeOut});
+		FlxTween.color(introFadeSprite, 2, FlxColor.BLACK, FlxColor.TRANSPARENT, {ease: FlxEase.cubeOut});
+	}
 }
