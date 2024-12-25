@@ -34,7 +34,7 @@ class PlayState extends FlxState
 
     var draggableObjects:Array<FlxSprite>;
 
-	public var dimOverlay:FlxSprite;
+    public var dimOverlay:FlxSprite;
 
     // gameplay logic
     var inspecting:Bool = false;
@@ -69,15 +69,15 @@ class PlayState extends FlxState
 
         draggableObjects.reverse();
 
-		// startTutorial();
-		// startInspection();
+        // startTutorial();
+        // startInspection();
 
         dimOverlay = new FlxSprite(0, 0);
         dimOverlay.makeGraphic(1280, 720, FlxColor.BLACK);
         add(dimOverlay);
         FlxG.camera.zoom = 1.2;
         FlxTween.tween(FlxG.camera, {zoom: 1}, 2, {ease: FlxEase.cubeOut});
-		FlxTween.color(dimOverlay, 1, FlxColor.BLACK, FlxColor.fromRGB(0, 0, 0, 100), 
+        FlxTween.color(dimOverlay, 1, FlxColor.BLACK, FlxColor.fromRGB(0, 0, 0, 100), 
             {
                 ease: FlxEase.cubeOut,
                 onComplete: (_) -> 
@@ -88,7 +88,7 @@ class PlayState extends FlxState
                         openSubState(new TutorialSubstate(onIntroComplete));
                 }
             }
-		);
+        );
     }
 
     var clickable:Bool = false;
@@ -175,7 +175,7 @@ class PlayState extends FlxState
         trace("bruh u so stupid");
     }
 
-	function onIntroComplete():Void 
+    function onIntroComplete():Void 
     {
         startInspection();
     }
