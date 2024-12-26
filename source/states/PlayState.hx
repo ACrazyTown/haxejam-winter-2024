@@ -1,5 +1,7 @@
 package states;
 
+import props.Document;
+import props.fish.FishData;
 import util.MathUtil;
 import flixel.math.FlxRect;
 import flixel.FlxG;
@@ -20,23 +22,23 @@ class PlayState extends FlxState
 {
     public static var instance:PlayState;
 
-    public var curHolding:FlxSprite;
-    var curHoldingOffsetX:Float = 0;
-    var curHoldingOffsetY:Float = 0;
-
     var concept:FlxSprite;
 
     var curFish:Fish;
-
-    var clock:FlxRadialGauge;
-
     var stampAccept:Stamp;
     var stampDeny:Stamp;
     public var stamps:FlxTypedGroup<FlxSprite>;
+    var infoPaper:Document;
+    var checklist:Document;
 
-    var draggableObjects:Array<FlxSprite>;
+    var clock:FlxRadialGauge;
 
     public var dimOverlay:FlxSprite;
+
+    var draggableObjects:Array<FlxSprite>;
+    public var curHolding:FlxSprite;
+    var curHoldingOffsetX:Float = 0;
+    var curHoldingOffsetY:Float = 0;
 
     // gameplay logic
     var inspecting:Bool = false;
@@ -50,14 +52,21 @@ class PlayState extends FlxState
     {
         instance = this;
         super.create();
+        persistentUpdate = true;
         draggableObjects = [];
 
         concept = new FlxSprite(0, 0).loadGraphic("assets/images/deskconcept.png");
         add(concept);
 
-        curFish = new Fish(229, 194, null);
+        curFish = new Fish(229, 194, FishData.random());
         curFish.visible = false;
         add(curFish);
+
+        infoPaper = new Document(775, 54, Paper);
+        add(infoPaper);
+
+        checklist = new Document(936, 122, Checklist);
+        add(checklist);
 
         stamps = new FlxTypedGroup<FlxSprite>();
         add(stamps);
@@ -99,8 +108,8 @@ class PlayState extends FlxState
         );
     }
 
-    var interactionsAllowed:Bool = false;
-    var clickable:Bool = false;
+    public var interactionsAllowed:Bool = false;
+    public var clickable:Bool = false;
     override public function update(elapsed:Float):Void
     {
         super.update(elapsed);
@@ -171,7 +180,8 @@ class PlayState extends FlxState
         curTime = 0;
 
         // TODO: Get randomized fish data here
-        curFish.loadFromData(null);
+        curFish.loadFromData(FishData.random());
+        trace(curFish.data);
         curFish.y = -curFish.height;
         var centerPos = MathUtil.centerToArea(FlxRect.get(0, 0, curFish.width, curFish.height), FlxRect.get(200, 110, 520, 420), XY);
 

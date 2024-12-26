@@ -1,9 +1,30 @@
 package props.fish;
 
+import game.Constants;
+import flixel.FlxG;
 import flixel.util.FlxColor;
 
 class FishData
 {
+    public static function random():FishData
+    {
+        // TODO: Change when proper fish assets are in
+        var color = FlxColor.fromHSB(0, 0.65, 0.84);
+        color.hue = FlxG.random.int(0, 359);
+
+        var kind = FlxG.random.getObject(Constants.FISH_KINDS);
+        var decoration = FlxG.random.getObject(Constants.FISH_DECORATIONS);
+        var location = FlxG.random.getObject(Constants.FISH_LOCATIONS);
+        var age = FlxG.random.int(1, 1000);
+        // TODO
+        var legal = true;
+        var poisonous = location == FishLocation.NUCLEAR_WASTELAND;
+        var evil = FlxG.random.bool(10);
+
+        var data = new FishData(color, kind, decoration, location, age, legal, poisonous, evil);
+        return data;
+    }
+
     public var color:FlxColor;
     public var kind:FishKind;
     public var decoration:FishDecoration;
@@ -24,5 +45,10 @@ class FishData
         this.legal = legal;
         this.poisonous = poisonous;
         this.evil = evil;
+    }
+
+    public function toString():String
+    {
+        return 'color: ${color.toWebString()} | kind: ${kind} | deco: ${decoration} | loc: ${location} | age: ${age} | legal: ${legal} | pois: ${poisonous} | evil: ${evil}';
     }
 }

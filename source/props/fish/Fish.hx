@@ -22,6 +22,8 @@ class Fish extends FlxSpriteContainer
 
         // fishShader = new FishColorShader(FlxColor.BLUE);
         // fish.shader = fishShader;
+        fishShader = new FishColorShader();
+        fish.shader = fishShader;
 
         loadFromData(data);
     }
@@ -31,5 +33,9 @@ class Fish extends FlxSpriteContainer
         this.data = data;
 
         fish.loadGraphic("assets/images/fish/tempfish.png");
+        fishShader.hue = data.color.hue;
+        trace(data.color.hue);
+        trace(data.color.saturation);
+        trace(data.color.brightness);
     }
 }
