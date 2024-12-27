@@ -5,13 +5,20 @@ import states.PlayState;
 import flixel.FlxG;
 import flixel.util.FlxColor;
 import flixel.FlxSprite;
+import props.Draggable;
 
-class Stamp extends FlxSprite
+class Stamp extends Draggable
 {
+    public var initialX:Float;
+    public var initialY:Float;
+
     var stampGraphic:String;
+
     public function new(x:Float = 0, y:Float = 0, accept:Bool)
     {
         super(x, y);
+        initialX = x;
+        initialY = y;
 
         makeGraphic(132, 83, accept ? FlxColor.GREEN : FlxColor.RED);
         stampGraphic = 'assets/images/stamp/stamp-${accept ? "good" : "bad"}.png';

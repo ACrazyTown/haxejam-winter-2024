@@ -1,5 +1,6 @@
 package states;
 
+import props.Draggable;
 import props.Document;
 import props.fish.FishData;
 import util.MathUtil;
@@ -35,8 +36,8 @@ class PlayState extends FlxState
 
     public var dimOverlay:FlxSprite;
 
-    var draggableObjects:Array<FlxSprite>;
-    public var curHolding:FlxSprite;
+    var draggableObjects:Array<Draggable>;
+    public var curHolding:Draggable;
     var curHoldingOffsetX:Float = 0;
     var curHoldingOffsetY:Float = 0;
 
@@ -118,8 +119,12 @@ class PlayState extends FlxState
         {
             for (obj in draggableObjects)
             {
+                if (!obj.dragAllowed)
+                    continue;
+
                 if (!clickable)
                     clickable = FlxG.mouse.overlaps(obj);
+                
                 handleMouse(obj);
             }
         }
@@ -140,7 +145,7 @@ class PlayState extends FlxState
         }
     }
 
-    function handleMouse(obj:FlxSprite):Void
+    function handleMouse(obj:Draggable):Void
     {
         if (FlxG.mouse.overlaps(obj) && FlxG.mouse.justPressed && curHolding == null)
         {
@@ -162,11 +167,27 @@ class PlayState extends FlxState
                 curHolding = null;
                 curHoldingOffsetX = 0;
                 curHoldingOffsetY = 0;
+
+                if (obj is Stamp)
+                {
+                    // cast (obj, IDraggable).dragAllowed = false;
+                    var stamp:Stamp = cast obj;
+                    stamp.dragAllowed = false;
+                    FlxTween.tween(obj, {x: stamp.initialX, y: stamp.initialY}, 0.5,
+                        {
+                            ease: FlxEase.quadInOut, 
+                            onComplete: (_) ->
+                            {
+                                stamp.dragAllowed = true;
+                            }
+                        }
+                    );
+                }
             }
         }
     }
 
-    function addDraggable(obj:FlxSprite):Void
+    function addDraggable(obj:Draggable):Void
     {
         add(obj);
         draggableObjects.push(obj);

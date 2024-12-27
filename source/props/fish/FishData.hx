@@ -19,9 +19,10 @@ class FishData
         // TODO
         var legal = true;
         var poisonous = location == FishLocation.NUCLEAR_WASTELAND;
-        var evil = FlxG.random.bool(10);
+        var evil = FlxG.random.bool(5);
+        var bomb = FlxG.random.bool(15);
 
-        var data = new FishData(color, kind, decoration, location, age, legal, poisonous, evil);
+        var data = new FishData(color, kind, decoration, location, age, legal, poisonous, evil, bomb);
         return data;
     }
 
@@ -33,9 +34,10 @@ class FishData
     public var legal:Bool;
     public var poisonous:Bool;
     public var evil:Bool;
+    public var bomb:Bool;
 
     public function new(color:FlxColor, kind:FishKind, decoration:FishDecoration, 
-        location:FishLocation, age:Int, legal:Bool, poisonous:Bool, evil:Bool)
+        location:FishLocation, age:Int, legal:Bool, poisonous:Bool, evil:Bool, bomb:Bool)
     {
         this.color = color;
         this.kind = kind;
@@ -45,6 +47,7 @@ class FishData
         this.legal = legal;
         this.poisonous = poisonous;
         this.evil = evil;
+        this.bomb = bomb;
     }
 
     public function toString():String

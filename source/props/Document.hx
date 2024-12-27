@@ -22,7 +22,7 @@ class Document extends FlxSprite
     {
         super.update(elapsed);
 
-        if (PlayState.instance.interactionsAllowed && FlxG.state.subState == null)
+        if (PlayState.instance.curHolding == null && PlayState.instance.interactionsAllowed && FlxG.state.subState == null)
         {
             if (FlxG.mouse.overlaps(this))
             {
