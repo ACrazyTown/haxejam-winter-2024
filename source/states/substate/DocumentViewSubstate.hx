@@ -45,6 +45,8 @@ class DocumentViewSubstate extends FlxSubState
                 bg.screenCenter();
 
             case BOOK:
+                bg.makeGraphic(500, 700);
+                bg.screenCenter();
         }
     }
 

@@ -37,6 +37,7 @@ class PlayState extends FlxState
     public var stamps:FlxTypedGroup<FlxSprite>;
     var infoPaper:Document;
     var checklist:Document;
+    var book:Document;
 
     var clock:FlxRadialGauge;
     var conveyorArea:FlxSprite;
@@ -80,6 +81,9 @@ class PlayState extends FlxState
 
         checklist = new Document(936, 122, CHECKLIST);
         add(checklist);
+
+        book = new Document(850, 370, BOOK);
+        add(book);
 
         stamps = new FlxTypedGroup<FlxSprite>();
         add(stamps);
@@ -283,7 +287,7 @@ class PlayState extends FlxState
         // TODO: randomize
         interactionsAllowed = false;
         fishTakenCareOf = false;
-        maxTime = 10;
+        maxTime = 160;
         curTime = 0;
 
         curFish.dragAllowed = false;
