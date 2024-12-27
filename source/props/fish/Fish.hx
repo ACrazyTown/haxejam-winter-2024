@@ -6,8 +6,11 @@ import vfx.FishColorShader;
 import flixel.FlxSprite;
 import flixel.group.FlxSpriteContainer;
 
-class Fish extends FlxSpriteContainer
+class Fish extends FlxSpriteContainer implements IDraggable
 {
+    public var dragAllowed:Bool = true;
+    public var pickupSound:Null<String> = null;
+
     public var data:FishData;
 
     var fish:FlxSprite;

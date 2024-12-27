@@ -1,6 +1,9 @@
 package states;
 
-import props.Draggable;
+import flixel.math.FlxPoint;
+import flixel.FlxBasic;
+import flixel.FlxObject;
+import props.IDraggable;
 import props.Document;
 import props.fish.FishData;
 import util.MathUtil;
@@ -25,6 +28,7 @@ class PlayState extends FlxState
 
     var concept:FlxSprite;
 
+    var fishPos:FlxPoint;
     var curFish:Fish;
     var stampAccept:Stamp;
     var stampDeny:Stamp;
@@ -33,13 +37,10 @@ class PlayState extends FlxState
     var checklist:Document;
 
     var clock:FlxRadialGauge;
+    var conveyorArea:FlxSprite;
+    var trashArea:FlxObject;
 
     public var dimOverlay:FlxSprite;
-
-    var draggableObjects:Array<Draggable>;
-    public var curHolding:Draggable;
-    var curHoldingOffsetX:Float = 0;
-    var curHoldingOffsetY:Float = 0;
 
     // gameplay logic
     var inspecting:Bool = false;
@@ -48,6 +49,11 @@ class PlayState extends FlxState
     var curTime:Float;
     var penaltiesReceived:Int;
     var score:Float;
+
+    var draggableObjects:Array<IDraggable>;
+    public var curHolding:IDraggable;
+    var curHoldingOffsetX:Float = 0;
+    var curHoldingOffsetY:Float = 0;
 
     override public function create()
     {
@@ -61,7 +67,7 @@ class PlayState extends FlxState
 
         curFish = new Fish(229, 194, FishData.random());
         curFish.visible = false;
-        add(curFish);
+        addDraggable(curFish);
 
         infoPaper = new Document(775, 54, Paper);
         add(infoPaper);
@@ -77,6 +83,11 @@ class PlayState extends FlxState
 
         stampDeny = new Stamp(stampAccept.x + stampAccept.width, stampAccept.y, false);
         addDraggable(stampDeny);
+
+        conveyorArea = new FlxSprite(0, 0).makeGraphic(180, 500, FlxColor.WHITE);
+        conveyorArea.x = FlxG.width - conveyorArea.width;
+        conveyorArea.alpha = 0;
+        add(conveyorArea);
 
         clock = new FlxRadialGauge(0, 0);
         clock.makeShapeGraphic(CIRCLE, 50, 0, FlxColor.BLACK);
@@ -122,10 +133,11 @@ class PlayState extends FlxState
                 if (!obj.dragAllowed)
                     continue;
 
+                var spr:FlxSprite = cast (obj, FlxSprite);
                 if (!clickable)
-                    clickable = FlxG.mouse.overlaps(obj);
+                    clickable = FlxG.mouse.overlaps(spr);
                 
-                handleMouse(obj);
+                handleMouse(spr, obj);
             }
         }
 
@@ -145,29 +157,30 @@ class PlayState extends FlxState
         }
     }
 
-    function handleMouse(obj:Draggable):Void
+    function handleMouse(obj:FlxObject, d:IDraggable):Void
     {
         if (FlxG.mouse.overlaps(obj) && FlxG.mouse.justPressed && curHolding == null)
         {
-            curHolding = obj;
+            curHolding = d;
             curHoldingOffsetX = FlxG.mouse.x - obj.x;
             curHoldingOffsetY = FlxG.mouse.y - obj.y;
+
+            if (d.pickupSound != null)
+            {
+                FlxG.sound.play(d.pickupSound);
+            }
 
             // Return now otherwise its gonna continue and mess up
             return;
         }
 
-        if (curHolding == obj)
+        if (curHolding == d)
         {
             obj.x = FlxG.mouse.x - curHoldingOffsetX;
             obj.y = FlxG.mouse.y - curHoldingOffsetY;
 
             if (FlxG.mouse.justPressed)
             {
-                curHolding = null;
-                curHoldingOffsetX = 0;
-                curHoldingOffsetY = 0;
-
                 if (obj is Stamp)
                 {
                     // cast (obj, IDraggable).dragAllowed = false;
@@ -183,13 +196,26 @@ class PlayState extends FlxState
                         }
                     );
                 }
+                else if (obj is Fish)
+                {
+                    // TODO: Check trash & plate
+                    if (!FlxG.mouse.overlaps(conveyorArea))
+                    {
+                        // TODO: sound
+                        return;
+                    }
+                }
+
+                curHolding = null;
+                curHoldingOffsetX = 0;
+                curHoldingOffsetY = 0;
             }
         }
     }
 
-    function addDraggable(obj:Draggable):Void
+    function addDraggable(obj:IDraggable):Void
     {
-        add(obj);
+        add(cast (obj, FlxBasic));
         draggableObjects.push(obj);
     }
 
@@ -200,17 +226,21 @@ class PlayState extends FlxState
         maxTime = 180;
         curTime = 0;
 
-        // TODO: Get randomized fish data here
+        curFish.dragAllowed = false;
         curFish.loadFromData(FishData.random());
         trace(curFish.data);
         curFish.y = -curFish.height;
-        var centerPos = MathUtil.centerToArea(FlxRect.get(0, 0, curFish.width, curFish.height), FlxRect.get(200, 110, 520, 420), XY);
+
+        if (fishPos != null)
+            fishPos.put();
+        fishPos = MathUtil.centerToArea(FlxRect.get(0, 0, curFish.width, curFish.height), FlxRect.get(200, 110, 520, 420), XY);
 
         curFish.visible = true;
-        FlxTween.tween(curFish, {y: centerPos.y}, 2, {ease: FlxEase.cubeInOut, onComplete: (_) ->
+        FlxTween.tween(curFish, {y: fishPos.y}, 2, {ease: FlxEase.cubeInOut, onComplete: (_) ->
         {
             inspecting = true;
             interactionsAllowed = true;
+            curFish.dragAllowed = true;
         }});
     }
 

@@ -5,10 +5,12 @@ import states.PlayState;
 import flixel.FlxG;
 import flixel.util.FlxColor;
 import flixel.FlxSprite;
-import props.Draggable;
 
-class Stamp extends Draggable
+class Stamp extends FlxSprite implements IDraggable
 {
+    public var dragAllowed:Bool = true;
+    public var pickupSound:Null<String> = null;
+
     public var initialX:Float;
     public var initialY:Float;
 

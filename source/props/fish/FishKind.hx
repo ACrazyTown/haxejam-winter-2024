@@ -1,6 +1,6 @@
 package props.fish;
 
-enum abstract FishKind(Int) from String to String
+enum abstract FishKind(String) from String to String
 {
     var NORMAL = "Normal";
     var SALMON = "Salmon";
