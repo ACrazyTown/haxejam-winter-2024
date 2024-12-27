@@ -39,12 +39,12 @@ class DocumentViewSubstate extends FlxSubState
 
         switch (type)
         {
-            case Paper, Checklist:
+            case PAPER, CHECKLIST:
                 // TODO: Replace with asset
                 bg.makeGraphic(500, 700);
                 bg.screenCenter();
 
-            case Book:
+            case BOOK:
         }
     }
 

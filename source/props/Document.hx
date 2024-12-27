@@ -40,7 +40,7 @@ class Document extends FlxSprite
 
 enum DocumentType
 {
-    Paper;
-    Checklist;
-    Book;
+    PAPER;
+    CHECKLIST;
+    BOOK;
 }

@@ -55,7 +55,7 @@ class MenuState extends FlxState
 			FlxTween.tween(swipe, {x: -520}, 1, {
 				ease: FlxEase.cubeOut,
 				onComplete:
-                (_) -> FlxG.switchState(new PlayState())
+                (_) -> FlxG.switchState(PlayState.new)
             });
         }
 		FlxTween.tween(playButton, {"scale.x": 1, "scale.y": 1}, 0.25, {ease: FlxEase.cubeOut});

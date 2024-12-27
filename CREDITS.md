@@ -6,3 +6,7 @@ Paper.wav by stijn -- https://freesound.org/s/43672/ -- License: Creative Common
 Conveyor belt by freemaster2 -- https://freesound.org/s/172350/ -- License: Attribution 4.0
 
 trash_fall.wav by philberts -- https://freesound.org/s/71512/ -- License: Creative Commons 0
+
+Cinematic Boom by Rizzard -- https://freesound.org/s/559529/ -- License: Creative Commons 0
+
+Old Church Bell.wav by dsp9000 -- https://freesound.org/s/76405/ -- License: Creative Commons 0

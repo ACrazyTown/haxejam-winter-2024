@@ -1,5 +1,6 @@
 package states;
 
+import states.substate.EndingSubState;
 import flixel.sound.FlxSound;
 import flixel.math.FlxPoint;
 import flixel.FlxBasic;
@@ -44,6 +45,7 @@ class PlayState extends FlxState
     public var dimOverlay:FlxSprite;
 
     // gameplay logic
+    var fishTakenCareOf:Bool = false;
     var inspecting:Bool = false;
     var totalTime:Float;
     var maxTime:Float;
@@ -73,10 +75,10 @@ class PlayState extends FlxState
         curFish.visible = false;
         addDraggable(curFish);
 
-        infoPaper = new Document(775, 54, Paper);
+        infoPaper = new Document(775, 54, PAPER);
         add(infoPaper);
 
-        checklist = new Document(936, 122, Checklist);
+        checklist = new Document(936, 122, CHECKLIST);
         add(checklist);
 
         stamps = new FlxTypedGroup<FlxSprite>();
@@ -114,7 +116,8 @@ class PlayState extends FlxState
         var needsTutorial:Bool = #if PLAY false #else true #end;
 
         dimOverlay = new FlxSprite(0, 0);
-        dimOverlay.makeGraphic(1280, 720, FlxColor.BLACK);
+        dimOverlay.makeGraphic(1280, 720, FlxColor.WHITE);
+        dimOverlay.color = FlxColor.BLACK;
         add(dimOverlay);
         FlxG.camera.zoom = 1.2;
         FlxTween.tween(FlxG.camera, {zoom: 1}, 2, {ease: FlxEase.cubeOut});
@@ -205,7 +208,7 @@ class PlayState extends FlxState
                 if (FlxG.mouse.overlaps(trashArea))
                 {
                     mouseState = TRASH;
-                    trashArea.alpha = 0.4;
+                    trashArea.alpha = 0.6;
                 }
                 else
                 {
@@ -215,7 +218,7 @@ class PlayState extends FlxState
                 if (FlxG.mouse.overlaps(conveyorArea))
                 {
                     // mouseState = TRASH;
-                    conveyorArea.alpha = 0.4;
+                    conveyorArea.alpha = 0.6;
                 }
                 else
                 {
@@ -279,6 +282,7 @@ class PlayState extends FlxState
     {
         // TODO: randomize
         interactionsAllowed = false;
+        fishTakenCareOf = false;
         maxTime = 10;
         curTime = 0;
 
@@ -287,17 +291,42 @@ class PlayState extends FlxState
         trace(curFish.data);
         curFish.y = -curFish.height;
 
+        if (curFish.data.evil || curFish.data.bomb)
+            maxTime = Constants.TIME_MAX_DANGER;
+
+        if (curFish.data.evil)
+        {
+            dimOverlay.color = FlxColor.RED;
+            dimOverlay.blend = MULTIPLY;
+            dimOverlay.alpha = 0.7;
+        }
+
         if (fishPos != null)
             fishPos.put();
         fishPos = MathUtil.centerToArea(FlxRect.get(0, 0, curFish.width, curFish.height), FlxRect.get(200, 110, 520, 420), XY);
 
         curFish.visible = true;
-        FlxTween.tween(curFish, {y: fishPos.y}, 2, {ease: FlxEase.cubeInOut, onComplete: (_) ->
+        if (curFish.data.evil)
         {
+            // no Tween we're going in Evil mode
+            FlxG.sound.play("assets/sounds/impact");
+            curFish.setPosition(fishPos.x, fishPos.y);
             inspecting = true;
             interactionsAllowed = true;
             curFish.dragAllowed = true;
-        }});
+            FlxG.sound.music.stop();
+
+        }
+        else
+        {
+            FlxTween.tween(curFish, {y: fishPos.y}, 2, {ease: FlxEase.cubeInOut, onComplete: (_) ->
+            {
+                inspecting = true;
+                interactionsAllowed = true;
+                curFish.dragAllowed = true;
+                FlxG.sound.music.play();
+            }});
+        }   
     }
 
     function penalty():Void
@@ -307,6 +336,11 @@ class PlayState extends FlxState
 
         penaltiesReceived++;
         score += Constants.SCORE_PENALTY;
+
+        if (curFish.data.evil)
+        {
+            openSubState(new EndingSubState(EVIL));
+        }
 
         if (penaltiesReceived > Constants.MAX_PENALTIES)
         {
@@ -325,6 +359,7 @@ class PlayState extends FlxState
 
     function startConveyor():Void
     {
+        fishTakenCareOf = true;
         inspecting = false;
         interactionsAllowed = false;
 
@@ -338,19 +373,41 @@ class PlayState extends FlxState
         {
             conveyorSound.fadeOut(0.5, 0, (_) ->
             {
-
+                verifyFishAction(false);
             });
         }});
     }
 
+    function verifyFishAction(trashed:Bool):Void
+    {
+        conveyorArea.alpha = 0;
+        trashArea.alpha = 0;
+
+        if (curFish.data.evil)
+        {
+            if (trashed)
+            {
+                dimOverlay.color = FlxColor.WHITE;
+                dimOverlay.blend = NORMAL;
+                dimOverlay.alpha = 0;
+            }
+            else
+            {
+                openSubState(new EndingSubState(EVIL));
+            }
+        }
+    }
+
     function trash():Void
     {
-        trace("oi oi oi ");
+        fishTakenCareOf = true;
         inspecting = false;
         interactionsAllowed = false;
 
         FlxG.sound.play("assets/sounds/trash");
         curFish.visible = false;
+
+        verifyFishAction(true);
     }
 
     function onIntroComplete():Void 

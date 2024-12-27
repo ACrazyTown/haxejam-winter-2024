@@ -36,9 +36,7 @@ class Fish extends FlxSpriteContainer implements IDraggable
         this.data = data;
 
         fish.loadGraphic("assets/images/fish/tempfish.png");
-        fishShader.hue = data.color.hue;
-        trace(data.color.hue);
-        trace(data.color.saturation);
-        trace(data.color.brightness);
+        // Always force hue 0 (red) on evil fish
+        fishShader.hue = data.evil ? data.color.hue : 0;
     }
 }
