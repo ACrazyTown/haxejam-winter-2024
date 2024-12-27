@@ -1,5 +1,6 @@
 package states;
 
+import util.DebugKeybindsPlugin;
 import ui.Mouse;
 import flixel.FlxSprite;
 import flixel.text.FlxText;
@@ -48,6 +49,8 @@ class Startup extends FlxState
         FlxG.mouse.visible = true;
 
         Mouse.setState(NORMAL);
+
+        DebugKeybindsPlugin.init();
     }
 
     function done():Void

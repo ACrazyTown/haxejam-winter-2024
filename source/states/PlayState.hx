@@ -1,5 +1,6 @@
 package states;
 
+import flixel.sound.FlxSound;
 import flixel.math.FlxPoint;
 import flixel.FlxBasic;
 import flixel.FlxObject;
@@ -38,7 +39,7 @@ class PlayState extends FlxState
 
     var clock:FlxRadialGauge;
     var conveyorArea:FlxSprite;
-    var trashArea:FlxObject;
+    var trashArea:FlxSprite;
 
     public var dimOverlay:FlxSprite;
 
@@ -49,6 +50,9 @@ class PlayState extends FlxState
     var curTime:Float;
     var penaltiesReceived:Int;
     var score:Float;
+
+    var tickTime:Float;
+    var tick1:Bool = false;
 
     var draggableObjects:Array<IDraggable>;
     public var curHolding:IDraggable;
@@ -89,6 +93,10 @@ class PlayState extends FlxState
         conveyorArea.alpha = 0;
         add(conveyorArea);
 
+        trashArea = new FlxSprite(conveyorArea.x, conveyorArea.height).makeGraphic(180, 220);
+        trashArea.alpha = 0;
+        add(trashArea);
+
         clock = new FlxRadialGauge(0, 0);
         clock.makeShapeGraphic(CIRCLE, 50, 0, FlxColor.BLACK);
         add(clock);
@@ -97,6 +105,10 @@ class PlayState extends FlxState
 
         // startTutorial();
         // startInspection();
+
+        // TODO: Finalized track, add .mp3 for web
+        FlxG.sound.playMusic("assets/music/test1a", 0.5);
+        // FlxG.sound.music.fadeIn(2, 0, 0.7);
 
         // TODO: Check if tutorial not seen
         var needsTutorial:Bool = #if PLAY false #else true #end;
@@ -121,7 +133,9 @@ class PlayState extends FlxState
     }
 
     public var interactionsAllowed:Bool = false;
-    public var clickable:Bool = false;
+    public var mouseState:MouseState = NORMAL;
+    // bleh
+    var skipInteractionsForAFrame:Bool = false;
     override public function update(elapsed:Float):Void
     {
         super.update(elapsed);
@@ -130,19 +144,20 @@ class PlayState extends FlxState
         {
             for (obj in draggableObjects)
             {
-                if (!obj.dragAllowed)
+                if (!obj.dragAllowed || skipInteractionsForAFrame)
                     continue;
 
                 var spr:FlxSprite = cast (obj, FlxSprite);
-                if (!clickable)
-                    clickable = FlxG.mouse.overlaps(spr);
+                if (mouseState == NORMAL)
+                    mouseState = FlxG.mouse.overlaps(spr) ? CLICKABLE : NORMAL;
                 
                 handleMouse(spr, obj);
             }
         }
+        skipInteractionsForAFrame = false;
 
-        Mouse.setState(clickable ? CLICKABLE : NORMAL);
-        clickable = false;
+        Mouse.setState(mouseState);
+        mouseState = NORMAL;
         if (inspecting)
         {
             totalTime += elapsed;
@@ -153,6 +168,12 @@ class PlayState extends FlxState
             {
                 penalty();
                 // TODO: reset time? 
+            }
+
+            if (curTime > (maxTime - 5))
+            {
+                // clock.color = FlxColor.RED;
+                FlxG.sound.music.pitch += 0.2 * elapsed;
             }
         }
     }
@@ -179,6 +200,29 @@ class PlayState extends FlxState
             obj.x = FlxG.mouse.x - curHoldingOffsetX;
             obj.y = FlxG.mouse.y - curHoldingOffsetY;
 
+            if (obj is Fish)
+            {
+                if (FlxG.mouse.overlaps(trashArea))
+                {
+                    mouseState = TRASH;
+                    trashArea.alpha = 0.4;
+                }
+                else
+                {
+                    trashArea.alpha = 0;
+                }
+
+                if (FlxG.mouse.overlaps(conveyorArea))
+                {
+                    // mouseState = TRASH;
+                    conveyorArea.alpha = 0.4;
+                }
+                else
+                {
+                    conveyorArea.alpha = 0;
+                }
+            }
+
             if (FlxG.mouse.justPressed)
             {
                 if (obj is Stamp)
@@ -199,16 +243,28 @@ class PlayState extends FlxState
                 else if (obj is Fish)
                 {
                     // TODO: Check trash & plate
-                    if (!FlxG.mouse.overlaps(conveyorArea))
+                    if (!FlxG.mouse.overlaps(conveyorArea) && !FlxG.mouse.overlaps(trashArea))
                     {
                         // TODO: sound
                         return;
+                    }
+                    else
+                    {
+                        if (FlxG.mouse.overlaps(conveyorArea))
+                        {
+                            startConveyor();
+                        }
+                        else if (FlxG.mouse.overlaps(trashArea))
+                        {
+                            trash();
+                        }
                     }
                 }
 
                 curHolding = null;
                 curHoldingOffsetX = 0;
                 curHoldingOffsetY = 0;
+                skipInteractionsForAFrame = true;
             }
         }
     }
@@ -223,7 +279,7 @@ class PlayState extends FlxState
     {
         // TODO: randomize
         interactionsAllowed = false;
-        maxTime = 180;
+        maxTime = 10;
         curTime = 0;
 
         curFish.dragAllowed = false;
@@ -246,6 +302,9 @@ class PlayState extends FlxState
 
     function penalty():Void
     {
+        FlxG.sound.music.stop();
+        FlxG.sound.music.pitch = 1;
+
         penaltiesReceived++;
         score += Constants.SCORE_PENALTY;
 
@@ -262,6 +321,36 @@ class PlayState extends FlxState
         inspecting = false;
 
         trace("bruh u so stupid");
+    }
+
+    function startConveyor():Void
+    {
+        inspecting = false;
+        interactionsAllowed = false;
+
+        var conveyorSound:FlxSound = FlxG.sound.play("assets/sounds/conveyor");
+
+        var distance:Float = Math.abs(-curFish.height - curFish.y);
+        var speed:Float = distance / 2;
+        var duration:Float = distance / speed;
+        trace(duration);
+        FlxTween.tween(curFish, {y: -curFish.height}, duration, {onComplete: (_) ->
+        {
+            conveyorSound.fadeOut(0.5, 0, (_) ->
+            {
+
+            });
+        }});
+    }
+
+    function trash():Void
+    {
+        trace("oi oi oi ");
+        inspecting = false;
+        interactionsAllowed = false;
+
+        FlxG.sound.play("assets/sounds/trash");
+        curFish.visible = false;
     }
 
     function onIntroComplete():Void 

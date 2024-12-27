@@ -26,7 +26,7 @@ class Document extends FlxSprite
         {
             if (FlxG.mouse.overlaps(this))
             {
-                PlayState.instance.clickable = true;
+                PlayState.instance.mouseState = CLICKABLE;
 
                 if (FlxG.mouse.justPressed)
                 {
