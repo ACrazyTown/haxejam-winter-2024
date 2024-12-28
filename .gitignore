@@ -4,3 +4,5 @@ export/
 *.ai
 secret/
 assets/music/suck
+assets/images/phone.fw.png
+*.psd
