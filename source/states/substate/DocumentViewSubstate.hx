@@ -1,6 +1,6 @@
 package states.substate;
 
-import js.html.AbortController;
+import flixel.tweens.FlxTween;
 import ui.FancyButton;
 import util.MathUtil;
 import props.Document;
@@ -42,20 +42,6 @@ class DocumentViewSubstate extends FlxSubState
         bg = new FlxSprite();
         add(bg);
 
-        leftBtn = new FancyButton(0, 0, "assets/images/ui/arrow_left.png", () -> {
-            trace("hi");
-        });
-        leftBtn.screenCenter();
-        leftBtn.x -= 310;
-        add(leftBtn);
-
-        rightBtn = new FancyButton(0, 0, "assets/images/ui/arrow_right.png", () -> {
-            trace("hi");
-        });
-        rightBtn.screenCenter();
-        rightBtn.x += 310;
-        add(rightBtn);
-
         switch (type)
         {
             case PAPER, CHECKLIST:
@@ -66,6 +52,20 @@ class DocumentViewSubstate extends FlxSubState
             case BOOK:
                 bg.makeGraphic(500, 700);
                 bg.screenCenter();
+
+                leftBtn = new FancyButton(0, 0, "assets/images/ui/arrow_left.png", () -> {
+                    trace("hi");
+                });
+                leftBtn.screenCenter();
+                leftBtn.x -= 310;
+                add(leftBtn);
+        
+                rightBtn = new FancyButton(0, 0, "assets/images/ui/arrow_right.png", () -> {
+                    trace("hi");
+                });
+                rightBtn.screenCenter();
+                rightBtn.x += 310;
+                add(rightBtn);
         }
     }
 
@@ -77,9 +77,17 @@ class DocumentViewSubstate extends FlxSubState
 
         if (FlxG.keys.justPressed.ESCAPE || (!FlxG.mouse.overlaps(bg) && FlxG.mouse.justPressed) && !firstFrame)
         {
-            PlayState.instance.interactionsAllowed = true;
-            parent.visible = true;
-            close();
+            if ((leftBtn == null && rightBtn == null) || (leftBtn != null && !FlxG.mouse.overlaps(leftBtn)) && (rightBtn != null && !FlxG.mouse.overlaps(rightBtn)))
+            {
+                if (leftBtn != null)
+                    FlxTween.cancelTweensOf(leftBtn);
+                if (rightBtn != null)
+                    FlxTween.cancelTweensOf(rightBtn);
+
+                PlayState.instance.interactionsAllowed = true;
+                parent.visible = true;
+                close();
+            }
         }
 
         firstFrame = false;
