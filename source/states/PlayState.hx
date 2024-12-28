@@ -57,9 +57,7 @@ class PlayState extends FlxState
     var curTime:Float;
     var penaltiesReceived:Int;
     var score:Float;
-
-    var tickTime:Float;
-    var tick1:Bool = false;
+    public var checklistQuestions:Array<ActualQuestionUsedInGame> = [];
 
     var draggableObjects:Array<IDraggable>;
     public var curHolding:IDraggable;
@@ -93,6 +91,10 @@ class PlayState extends FlxState
         var stampUnderside:FlxSprite = new FlxSprite(240, 585).loadGraphic("assets/images/stamp/underside.png");
         add(stampUnderside);
 
+        curFish = new Fish(229, 194, FishData.random());
+        curFish.visible = false;
+        addDraggable(curFish);
+
         stamps = new FlxTypedGroup<FlxSprite>();
         add(stamps);
 
@@ -101,10 +103,6 @@ class PlayState extends FlxState
 
         stampDeny = new Stamp(365, 598, false);
         addDraggable(stampDeny);
-
-        curFish = new Fish(229, 194, FishData.random());
-        curFish.visible = false;
-        addDraggable(curFish);
 
         plateArea = new FlxSprite(176, 76).makeGraphic(580, 510, FlxColor.WHITE);
         plateArea.alpha = 0;
@@ -132,7 +130,7 @@ class PlayState extends FlxState
         trace("RNG seed: " + FlxG.random.initialSeed);
 
         // TODO: Finalized track, add .mp3 for web
-        FlxG.sound.playMusic("assets/music/test1a", 0.5);
+        FlxG.sound.playMusic("assets/music/main", 0.5);
         // FlxG.sound.music.fadeIn(2, 0, 0.7);
 
         // TODO: Check if tutorial not seen
@@ -332,6 +330,25 @@ class PlayState extends FlxState
         trace(curFish.data);
         curFish.y = -curFish.height;
 
+        // generate checklist
+        var colors = Constants.QUESTIONS_COLOR.copy();
+        var locations = Constants.QUESTIONS_LOCATION.copy();
+
+        FlxG.random.shuffle(colors);
+        FlxG.random.shuffle(locations);
+
+        var allCorrect = FlxG.random.bool(Constants.ALL_CORRECT_CHANCE);
+        if (allCorrect)
+        {
+            checklistQuestions.push({q: colors[0], inverse: !colors[1].func(curFish.data)});
+            checklistQuestions.push({q: colors[1], inverse: !colors[1].func(curFish.data)});
+            checklistQuestions.push({q: colors[1], inverse: !colors[1].func(curFish.data)});
+        }
+        else
+        {
+            
+        }
+
         if (curFish.data.evil || curFish.data.bomb)
             maxTime = Constants.TIME_MAX_DANGER;
 
@@ -477,4 +494,10 @@ class PlayState extends FlxState
         startInspection();
     }
 
+}
+
+typedef ActualQuestionUsedInGame =
+{
+    q:ChecklistQuestion,
+    inverse:Bool
 }

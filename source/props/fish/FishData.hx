@@ -20,7 +20,6 @@ class FishData
         var poisonous = location == FishLocation.NUCLEAR_WASTELAND;
         var evil = FlxG.random.bool(5);
         var bomb = FlxG.random.bool(15);
-        bomb = true;
 
         var data = new FishData(color, kind, location, age, legal, poisonous, evil, bomb);
         return data;

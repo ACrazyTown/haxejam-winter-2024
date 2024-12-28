@@ -1,6 +1,8 @@
 package game;
 
+import props.fish.Fish;
 import props.fish.FishData;
+import props.fish.FishLocation;
 
 class ChecklistQuestions 
 {
@@ -44,5 +46,65 @@ class ChecklistQuestions
     public static function isPoisonous(data:FishData):Bool
     {
         return data.poisonous;
+    }
+    
+    public static function wasLegallyCaught(data:FishData):Bool
+    {
+        return data.legal;
+    }
+
+    public static function hasDecoration(data:FishData):Bool
+    {
+        return data.kind == DAPPER || data.kind == CHILL;
+    }
+
+    public static function hasHat(data:FishData):Bool
+    {
+        return data.kind == DAPPER;
+    }
+
+    public static function isOverAYearOld(data:FishData):Bool
+    {
+        return data.age > 365;
+    }
+
+    public static function isFromFindfishLake(data:FishData):Bool
+    {
+        return data.location == FINDFISH_LAKE;
+    }
+
+    public static function isFromUnderlake(data:FishData):Bool
+    {
+        return data.location == UNDERLAKE;
+    }
+
+    public static function isFromSalmonSea(data:FishData):Bool
+    {
+        return data.location == SALMON_SEA;
+    }
+
+    public static function isFromCatfishCanal(data:FishData):Bool
+    {
+        return data.location == CATFISH_CANAL;
+    }
+
+    public static function isFromNuclearWasteland(data:FishData):Bool
+    {
+        return data.location == NUCLEAR_WASTELAND;
+    }
+
+    public static function isFromHaksHarbor(data:FishData):Bool
+    {
+        return data.location == HAKS_HARBOR;
+    }
+
+    public static function isFromFlikselFjord(data:FishData):Bool
+    {
+        return data.location == FLIKSEL_FJORD;
+    }
+
+    public static function meows(data:FishData):Bool
+    {
+        return data.kind == CAT;
     }
 }
