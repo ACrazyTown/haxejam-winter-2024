@@ -10,3 +10,8 @@ trash_fall.wav by philberts -- https://freesound.org/s/71512/ -- License: Creati
 Cinematic Boom by Rizzard -- https://freesound.org/s/559529/ -- License: Creative Commons 0
 
 Old Church Bell.wav by dsp9000 -- https://freesound.org/s/76405/ -- License: Creative Commons 0
+
+phone short buzz by richwise -- https://freesound.org/s/476836/ -- License: Creative Commons 0
+
+# Fonts
+Overlock -- https://fonts.google.com/specimen/Overlock -- Copyright (c) 2011, Dario Manuel Muhafara -- SIL Open Font License
