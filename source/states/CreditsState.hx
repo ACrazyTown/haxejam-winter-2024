@@ -10,8 +10,10 @@ class CreditsState extends FlxState
 
     override public function create()
     {
-        stubText = new FlxText(0, 0, 0, "Credits State", 20);
+        stubText = new FlxText(0, 0, 0, "Credits", 80);
+        stubText.font = "Overlock Black";
         stubText.screenCenter();
+        stubText.y = 60;
         add(stubText);
 
         super.create();

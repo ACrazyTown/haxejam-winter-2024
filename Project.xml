@@ -91,4 +91,7 @@
     <!-- _________________________________ Custom _______________________________ -->
 
     <!--Place custom nodes like icons here-->
+
+    <!-- Embed fonts -->
+    <assets path="assets/fonts" embed="true" />
 </project>
