@@ -1,5 +1,7 @@
 package states.substate;
 
+import js.html.AbortController;
+import ui.FancyButton;
 import util.MathUtil;
 import props.Document;
 import flixel.FlxG;
@@ -13,6 +15,9 @@ class DocumentViewSubstate extends FlxSubState
     var overlay:FlxSprite;
     var bg:FlxSprite;
     var type:DocumentType;
+
+    var leftBtn:FancyButton;
+    var rightBtn:FancyButton;
 
     var parent:Document;
 
@@ -36,6 +41,20 @@ class DocumentViewSubstate extends FlxSubState
 
         bg = new FlxSprite();
         add(bg);
+
+        leftBtn = new FancyButton(0, 0, "assets/images/ui/arrow_left.png", () -> {
+            trace("hi");
+        });
+        leftBtn.screenCenter();
+        leftBtn.x -= 310;
+        add(leftBtn);
+
+        rightBtn = new FancyButton(0, 0, "assets/images/ui/arrow_right.png", () -> {
+            trace("hi");
+        });
+        rightBtn.screenCenter();
+        rightBtn.x += 310;
+        add(rightBtn);
 
         switch (type)
         {

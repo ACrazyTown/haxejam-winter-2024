@@ -42,7 +42,7 @@ Overlock -- https://fonts.google.com/specimen/Overlock -- Copyright (c) 2011, Da
         creditsText.y += 60;
         add(creditsText);
 
-        closeBtn = new FancyButton(10, 10, "assets/images/ui/arrow.png", () -> {
+        closeBtn = new FancyButton(10, 10, "assets/images/ui/arrow_left.png", () -> {
             Mouse.setState(NORMAL);
             FlxG.switchState(MenuState.new);
         });
