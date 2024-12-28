@@ -16,7 +16,7 @@
     <!-- ____________________________ Window Settings ___________________________ -->
 
     <!--These window settings apply to all targets-->
-    <window width="1280" height="720" fps="60" background="#000000" hardware="true" vsync="false" />
+    <window width="1280" height="720" fps="60" background="#000000" hardware="true" vsync="true" />
 
     <!--HTML5-specific-->
     <window if="html5" resizable="true" />
@@ -31,7 +31,9 @@
 
     <set name="BUILD_DIR" value="export" />
     <source path="source" />
-    <assets path="assets" />
+
+    <assets path="assets" exclude="*.ogg" if="web" />
+    <assets path="assets" exclude="*.mp3" unless="web" />
 
     <!-- _______________________________ Libraries ______________________________ -->
 

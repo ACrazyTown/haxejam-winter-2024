@@ -31,7 +31,7 @@ class PlayState extends FlxState
     var concept:FlxSprite;
 
     var fishPos:FlxPoint;
-    var curFish:Fish;
+    public var curFish:Fish;
     var stampAccept:Stamp;
     var stampDeny:Stamp;
     public var stamps:FlxTypedGroup<FlxSprite>;
@@ -40,6 +40,7 @@ class PlayState extends FlxState
     var book:Document;
 
     var clock:FlxRadialGauge;
+    var plateArea:FlxSprite;
     var conveyorArea:FlxSprite;
     var trashArea:FlxSprite;
 
@@ -53,14 +54,14 @@ class PlayState extends FlxState
     var curTime:Float;
     var penaltiesReceived:Int;
     var score:Float;
-
-    var tickTime:Float;
-    var tick1:Bool = false;
+    public var checklistQuestions:Array<ActualQuestionUsedInGame> = [];
 
     var draggableObjects:Array<IDraggable>;
     public var curHolding:IDraggable;
     var curHoldingOffsetX:Float = 0;
     var curHoldingOffsetY:Float = 0;
+
+    var bombSfx:FlxSound;
 
     override public function create()
     {
@@ -69,30 +70,37 @@ class PlayState extends FlxState
         persistentUpdate = true;
         draggableObjects = [];
 
-        concept = new FlxSprite(0, 0).loadGraphic("assets/images/deskconcept.png");
+        concept = new FlxSprite(0, 0).loadGraphic("assets/images/desk.png");
         add(concept);
+
+        infoPaper = new Document(778, 54, PAPER);
+        add(infoPaper);
+
+        checklist = new Document(948, 201, CHECKLIST);
+        add(checklist);
+
+        book = new Document(796, 424, BOOK);
+        add(book);
+
+        var stampUnderside:FlxSprite = new FlxSprite(240, 585).loadGraphic("assets/images/stamp/underside.png");
+        add(stampUnderside);
 
         curFish = new Fish(229, 194, FishData.random());
         curFish.visible = false;
         addDraggable(curFish);
 
-        infoPaper = new Document(775, 54, PAPER);
-        add(infoPaper);
-
-        checklist = new Document(936, 122, CHECKLIST);
-        add(checklist);
-
-        book = new Document(850, 370, BOOK);
-        add(book);
-
         stamps = new FlxTypedGroup<FlxSprite>();
         add(stamps);
 
-        stampAccept = new Stamp(162, 588, true);
+        stampAccept = new Stamp(248, 594, true);
         addDraggable(stampAccept);
 
-        stampDeny = new Stamp(stampAccept.x + stampAccept.width, stampAccept.y, false);
+        stampDeny = new Stamp(365, 598, false);
         addDraggable(stampDeny);
+
+        plateArea = new FlxSprite(176, 76).makeGraphic(580, 510, FlxColor.WHITE);
+        plateArea.alpha = 0;
+        add(plateArea);
 
         conveyorArea = new FlxSprite(0, 0).makeGraphic(180, 500, FlxColor.WHITE);
         conveyorArea.x = FlxG.width - conveyorArea.width;
@@ -112,8 +120,11 @@ class PlayState extends FlxState
         // startTutorial();
         // startInspection();
 
+        FlxG.random.resetInitialSeed();
+        trace("RNG seed: " + FlxG.random.initialSeed);
+
         // TODO: Finalized track, add .mp3 for web
-        FlxG.sound.playMusic("assets/music/test1a", 0.5);
+        FlxG.sound.playMusic("assets/music/main", 0.5);
         // FlxG.sound.music.fadeIn(2, 0, 0.7);
 
         // TODO: Check if tutorial not seen
@@ -228,6 +239,15 @@ class PlayState extends FlxState
                 {
                     conveyorArea.alpha = 0;
                 }
+
+                if (FlxG.mouse.overlaps(plateArea))
+                {
+                    plateArea.alpha = 0.6;
+                }
+                else
+                {
+                    plateArea.alpha = 0;
+                }
             }
 
             if (FlxG.mouse.justPressed)
@@ -250,7 +270,7 @@ class PlayState extends FlxState
                 else if (obj is Fish)
                 {
                     // TODO: Check trash & plate
-                    if (!FlxG.mouse.overlaps(conveyorArea) && !FlxG.mouse.overlaps(trashArea))
+                    if (!FlxG.mouse.overlaps(conveyorArea) && !FlxG.mouse.overlaps(trashArea) && !FlxG.mouse.overlaps(plateArea))
                     {
                         // TODO: sound
                         return;
@@ -265,6 +285,10 @@ class PlayState extends FlxState
                         {
                             trash();
                         }
+                        else if (FlxG.mouse.overlaps(plateArea))
+                        {
+                            curFish.setPosition(fishPos.x, fishPos.y);
+                        }
                     }
                 }
 
@@ -272,6 +296,10 @@ class PlayState extends FlxState
                 curHoldingOffsetX = 0;
                 curHoldingOffsetY = 0;
                 skipInteractionsForAFrame = true;
+
+                conveyorArea.alpha = 0;
+                plateArea.alpha = 0;
+                trashArea.alpha = 0;
             }
         }
     }
@@ -284,16 +312,36 @@ class PlayState extends FlxState
 
     function startInspection():Void
     {
-        // TODO: randomize
         interactionsAllowed = false;
         fishTakenCareOf = false;
-        maxTime = 160;
+        maxTime = FlxG.random.float(Constants.TIME_MIN, Constants.TIME_MAX);
         curTime = 0;
+
+        trace(maxTime);
 
         curFish.dragAllowed = false;
         curFish.loadFromData(FishData.random());
         trace(curFish.data);
         curFish.y = -curFish.height;
+
+        // generate checklist
+        var colors = Constants.QUESTIONS_COLOR.copy();
+        var locations = Constants.QUESTIONS_LOCATION.copy();
+
+        FlxG.random.shuffle(colors);
+        FlxG.random.shuffle(locations);
+
+        var allCorrect = FlxG.random.bool(Constants.ALL_CORRECT_CHANCE);
+        if (allCorrect)
+        {
+            checklistQuestions.push({q: colors[0], inverse: !colors[1].func(curFish.data)});
+            checklistQuestions.push({q: colors[1], inverse: !colors[1].func(curFish.data)});
+            checklistQuestions.push({q: colors[1], inverse: !colors[1].func(curFish.data)});
+        }
+        else
+        {
+            
+        }
 
         if (curFish.data.evil || curFish.data.bomb)
             maxTime = Constants.TIME_MAX_DANGER;
@@ -303,6 +351,13 @@ class PlayState extends FlxState
             dimOverlay.color = FlxColor.RED;
             dimOverlay.blend = MULTIPLY;
             dimOverlay.alpha = 0.7;
+        }
+
+        if (curFish.data.bomb)
+        {
+            bombSfx = FlxG.sound.load("assets/sounds/fuse");
+            bombSfx.play();
+            bombSfx.fadeIn(2.5);
         }
 
         if (fishPos != null)
@@ -344,6 +399,11 @@ class PlayState extends FlxState
         if (curFish.data.evil)
         {
             openSubState(new EndingSubState(EVIL));
+        }
+        if (curFish.data.bomb)
+        {
+            bombSfx.stop();
+            openSubState(new EndingSubState(EXPLODE));
         }
 
         if (penaltiesReceived > Constants.MAX_PENALTIES)
@@ -400,6 +460,15 @@ class PlayState extends FlxState
                 openSubState(new EndingSubState(EVIL));
             }
         }
+
+        if (curFish.data.bomb)
+        {
+            bombSfx.stop();
+            if (!trashed)
+            {   
+                openSubState(new EndingSubState(EXPLODE));
+            }
+        }
     }
 
     function trash():Void
@@ -419,4 +488,10 @@ class PlayState extends FlxState
         startInspection();
     }
 
+}
+
+typedef ActualQuestionUsedInGame =
+{
+    q:ChecklistQuestion,
+    inverse:Bool
 }

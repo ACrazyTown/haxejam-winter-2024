@@ -13,5 +13,9 @@ Old Church Bell.wav by dsp9000 -- https://freesound.org/s/76405/ -- License: Cre
 
 phone short buzz by richwise -- https://freesound.org/s/476836/ -- License: Creative Commons 0
 
+Explosion and Rubble/Debris by deleted_user_1887925 -- https://freesound.org/s/132929/ -- License: Creative Commons 0
+
+Sparkler.aif by Ned Bouhalassa -- https://freesound.org/s/8320/ -- License: Creative Commons 0
+
 # Fonts
 Overlock -- https://fonts.google.com/specimen/Overlock -- Copyright (c) 2011, Dario Manuel Muhafara -- SIL Open Font License

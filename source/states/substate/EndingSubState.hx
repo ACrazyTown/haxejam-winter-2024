@@ -11,6 +11,7 @@ enum Ending
 {
     TOO_MANY_PENALTIES;
     EVIL;
+    EXPLODE;
 }
 
 class EndingSubState extends FlxSubState
@@ -26,6 +27,7 @@ class EndingSubState extends FlxSubState
     override function create():Void
     {
         PlayState.instance.persistentUpdate = false;
+        FlxG.sound.music.stop();
 
         switch (ending)
         {
@@ -51,6 +53,17 @@ class EndingSubState extends FlxSubState
                             }
                         });
                     });
+                });
+                
+            case EXPLODE:
+                bg = new FlxSprite().makeGraphic(1280, 720, FlxColor.BLACK);
+                add(bg);
+
+                FlxG.sound.play("assets/sounds/explode", 0.7);
+                FlxG.camera.flash(FlxColor.WHITE, 4);
+                FlxTimer.wait(8, () ->
+                {
+                    saveAndExit();
                 });
         }
     }
