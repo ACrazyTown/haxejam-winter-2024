@@ -15,7 +15,24 @@ class Document extends FlxSprite
         super(x, y);
         this.type = type;
 
-        makeGraphic(140, 210, FlxColor.PURPLE);
+        var graph:String = "assets/images/";
+        switch (type)
+        {
+            case PAPER:
+                graph += "infopaper.png";
+            case CHECKLIST:
+                graph += "checklist.png";
+            case BOOK:
+                graph += "fishbook.png";
+        }
+        loadGraphic(graph);
+
+        if (type == BOOK)
+        {
+            // book graphic is weird so we have to resize it
+            width = 194;
+            height = 265;
+        }
     }
 
     override function update(elapsed:Float):Void

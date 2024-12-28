@@ -69,29 +69,32 @@ class PlayState extends FlxState
         persistentUpdate = true;
         draggableObjects = [];
 
-        concept = new FlxSprite(0, 0).loadGraphic("assets/images/deskconcept.png");
+        concept = new FlxSprite(0, 0).loadGraphic("assets/images/desk.png");
         add(concept);
 
         curFish = new Fish(229, 194, FishData.random());
         curFish.visible = false;
         addDraggable(curFish);
 
-        infoPaper = new Document(775, 54, PAPER);
+        infoPaper = new Document(778, 54, PAPER);
         add(infoPaper);
 
-        checklist = new Document(936, 122, CHECKLIST);
+        checklist = new Document(948, 201, CHECKLIST);
         add(checklist);
 
-        book = new Document(850, 370, BOOK);
+        book = new Document(796, 424, BOOK);
         add(book);
+
+        var stampUnderside:FlxSprite = new FlxSprite(240, 585).loadGraphic("assets/images/stamp/underside.png");
+        add(stampUnderside);
 
         stamps = new FlxTypedGroup<FlxSprite>();
         add(stamps);
 
-        stampAccept = new Stamp(162, 588, true);
+        stampAccept = new Stamp(248, 594, true);
         addDraggable(stampAccept);
 
-        stampDeny = new Stamp(stampAccept.x + stampAccept.width, stampAccept.y, false);
+        stampDeny = new Stamp(365, 598, false);
         addDraggable(stampDeny);
 
         conveyorArea = new FlxSprite(0, 0).makeGraphic(180, 500, FlxColor.WHITE);

@@ -52,6 +52,6 @@ class FishData
 
     public function toString():String
     {
-        return 'color: ${color.toWebString()} | kind: ${kind} | deco: ${decoration} | loc: ${location} | age: ${age} | legal: ${legal} | pois: ${poisonous} | evil: ${evil}';
+        return 'color: ${color.toWebString()} | kind: ${kind} | deco: ${decoration} | loc: ${location} | age: ${age} | legal: ${legal} | pois: ${poisonous} | evil: ${evil} | bomb: ${bomb}';
     }
 }
