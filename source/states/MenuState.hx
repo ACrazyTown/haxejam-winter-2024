@@ -1,5 +1,6 @@
 package states;
 
+import flixel.util.typeLimit.NextState;
 import ui.FancyButton;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -32,21 +33,17 @@ class MenuState extends FlxState
         add(fg);
 
         playButtonNew = new FancyButton(1280, 400, "assets/images/ui/play_btn.png", () -> {
-            FlxTween.tween(swipe, {x: -520}, 1, {
-                ease: FlxEase.cubeOut,
-                onComplete:
-                (_) -> FlxG.switchState(PlayState.new)
-            });
+            swipeStateSwitcher(PlayState.new);
         });
         add(playButtonNew);
 
         settingsButton = new FancyButton(20, 520, "assets/images/ui/settings_btn.png", () -> {
-            // ...
+            swipeStateSwitcher(SettingsState.new);
         });
         add(settingsButton);
 
         creditsButton = new FancyButton(200, 520, "assets/images/ui/credits_btn.png", () -> {
-            // ...
+            swipeStateSwitcher(CreditsState.new);
         });
         add(creditsButton);
 
@@ -56,5 +53,14 @@ class MenuState extends FlxState
 
         FlxTween.tween(fg, {x: 0}, 1, {ease: FlxEase.cubeOut});
         FlxTween.tween(playButtonNew, {x: 650}, 1, {ease: FlxEase.cubeOut});
+    }
+
+    function swipeStateSwitcher(nextState:NextState)
+    {
+        FlxTween.tween(swipe, {x: -520}, 1, {
+            ease: FlxEase.cubeOut,
+            onComplete:
+            (_) -> FlxG.switchState(nextState)
+        });
     }
 }
