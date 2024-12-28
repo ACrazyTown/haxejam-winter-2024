@@ -1,5 +1,7 @@
 package props;
 
+import flixel.util.FlxAxes;
+import flixel.tweens.FlxTween;
 import flixel.util.FlxTimer;
 import flixel.sound.FlxSound;
 import flixel.math.FlxPoint;
@@ -46,6 +48,7 @@ class Phone extends FlxSpriteContainer
         screen.loadGraphic("assets/images/phone0.png");
         sndBeep.play();
         sndBuzz.play();
+        FlxTween.shake(this, 0.01, 0.5, FlxAxes.X);
         new FlxTimer().start(1.5, (_) -> {
             sndHappy.play();
             screen.loadGraphic("assets/images/phone1.png");
@@ -60,6 +63,7 @@ class Phone extends FlxSpriteContainer
         screen.loadGraphic("assets/images/phone0.png");
         sndBeep.play();
         sndBuzz.play();
+        FlxTween.shake(this, 0.01, 0.5, FlxAxes.X);
         new FlxTimer().start(1.5, (_) -> {
             sndMad.play();
             screen.loadGraphic("assets/images/phone2.png");
