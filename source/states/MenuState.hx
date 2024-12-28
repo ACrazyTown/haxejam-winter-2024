@@ -12,7 +12,11 @@ import flixel.tweens.FlxTween;
 class MenuState extends FlxState
 {
     var playButton:FlxSprite;
-    var mouseWasDownOnBtn:Map<String, Bool> = ["play" => false, "credits" => false, "settings" => false];
+    var settingsButton:FlxSprite;
+    var creditsButton:FlxSprite;
+
+    var mouseWasDownOnBtn:Map<String, Bool> = ["play" => false, "settings" => false, "credits" => false];
+
     var bg:FlxSprite;
     var fg:FlxSprite;
     var swipe:FlxSprite;
@@ -33,17 +37,25 @@ class MenuState extends FlxState
         playButton.loadGraphic("assets/images/ui/play_btn.png");
         add(playButton);
 
+        settingsButton = new FlxSprite(20, 520);
+        settingsButton.loadGraphic("assets/images/ui/settings_btn.png");
+        add(settingsButton);
+
+        creditsButton = new FlxSprite(200, 520);
+        creditsButton.loadGraphic("assets/images/ui/credits_btn.png");
+        add(creditsButton);
+
         swipe = new FlxSprite(1280, 0);
         swipe.loadGraphic("assets/images/ui/start_screen_swipe.png");
         add(swipe);
 
-        FlxMouseEvent.add(
+        FlxMouseEvent.add( // play
             playButton,
-            (pb:FlxSprite) -> { // down
+            (btn:FlxSprite) -> { // down
                 mouseWasDownOnBtn.set("play", true);
-                BtnAnim.onMouseDown(pb);
+                BtnAnim.onMouseDown(btn);
             },
-            (pb:FlxSprite) -> { // up
+            (btn:FlxSprite) -> { // up
                 if (mouseWasDownOnBtn.get("play"))
                 {
                     FlxTween.tween(swipe, {x: -520}, 1, {
@@ -52,16 +64,64 @@ class MenuState extends FlxState
                         (_) -> FlxG.switchState(PlayState.new)
                     });
                 }
-                BtnAnim.onMouseUp(pb);
+                BtnAnim.onMouseUp(btn);
             },
-            (pb:FlxSprite) -> { // over
+            (btn:FlxSprite) -> { // over
                 Mouse.setState(CLICKABLE);
-                BtnAnim.onMouseOver(pb);
+                BtnAnim.onMouseOver(btn);
             },
-            (pb:FlxSprite) -> { // out
+            (btn:FlxSprite) -> { // out
                 Mouse.setState(NORMAL);
                 mouseWasDownOnBtn.set("play", false);
-                BtnAnim.onMouseOut(pb);
+                BtnAnim.onMouseOut(btn);
+            }
+        );
+
+        FlxMouseEvent.add( // settings
+            settingsButton,
+            (btn:FlxSprite) -> { // down
+                mouseWasDownOnBtn.set("settings", true);
+                BtnAnim.onMouseDown(btn);
+            },
+            (btn:FlxSprite) -> { // up
+                if (mouseWasDownOnBtn.get("settings"))
+                {
+                    trace("settings pressed");
+                }
+                BtnAnim.onMouseUp(btn);
+            },
+            (btn:FlxSprite) -> { // over
+                Mouse.setState(CLICKABLE);
+                BtnAnim.onMouseOver(btn);
+            },
+            (btn:FlxSprite) -> { // out
+                Mouse.setState(NORMAL);
+                mouseWasDownOnBtn.set("settings", false);
+                BtnAnim.onMouseOut(btn);
+            }
+        );
+
+        FlxMouseEvent.add( // credits
+            creditsButton,
+            (btn:FlxSprite) -> { // down
+                mouseWasDownOnBtn.set("credits", true);
+                BtnAnim.onMouseDown(btn);
+            },
+            (btn:FlxSprite) -> { // up
+                if (mouseWasDownOnBtn.get("credits"))
+                {
+                    trace("credits pressed");
+                }
+                BtnAnim.onMouseUp(btn);
+            },
+            (btn:FlxSprite) -> { // over
+                Mouse.setState(CLICKABLE);
+                BtnAnim.onMouseOver(btn);
+            },
+            (btn:FlxSprite) -> { // out
+                Mouse.setState(NORMAL);
+                mouseWasDownOnBtn.set("credits", false);
+                BtnAnim.onMouseOut(btn);
             }
         );
 
