@@ -1,5 +1,6 @@
 package states;
 
+import ui.BtnAnim;
 import ui.Mouse;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -45,34 +46,32 @@ class MenuState extends FlxState
     function playBtnOnMouseDown(playButton:FlxSprite)
     {
         mouseWasDownOnPlayBtn = true;
-		FlxTween.tween(playButton, {"scale.x": 0.85, "scale.y": 0.85}, 0.25, {ease: FlxEase.cubeOut});
+        BtnAnim.onMouseDown(playButton);
     }
 
     function playBtnOnMouseUp(playButton:FlxSprite)
     {
         if (mouseWasDownOnPlayBtn)
         {
-			FlxTween.tween(swipe, {x: -520}, 1, {
-				ease: FlxEase.cubeOut,
-				onComplete:
+            FlxTween.tween(swipe, {x: -520}, 1, {
+                ease: FlxEase.cubeOut,
+                onComplete:
                 (_) -> FlxG.switchState(PlayState.new)
             });
         }
-		FlxTween.tween(playButton, {"scale.x": 1, "scale.y": 1}, 0.25, {ease: FlxEase.cubeOut});
+        BtnAnim.onMouseUp(playButton);
     }
 
     function playBtnOnMouseOver(playButton:FlxSprite)
     {
         Mouse.setState(CLICKABLE);
-        FlxTween.angle(playButton, 0, -10, 0.25, {ease: FlxEase.cubeOut});
-        FlxTween.tween(playButton, {"scale.x": 1.2, "scale.y": 1.2}, 0.25, {ease: FlxEase.cubeOut});
+        BtnAnim.onMouseOver(playButton);
     }
 
     function playBtnOnMouseOut(playButton:FlxSprite)
     {
         Mouse.setState(NORMAL);
         mouseWasDownOnPlayBtn = false;
-        FlxTween.angle(playButton, -10, 0, 0.25, {ease: FlxEase.cubeOut});
-        FlxTween.tween(playButton, {"scale.x": 1, "scale.y": 1}, 0.25, {ease: FlxEase.cubeOut});
+        BtnAnim.onMouseOut(playButton);
     }
 }
