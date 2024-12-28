@@ -1,5 +1,6 @@
 package states;
 
+import ui.Mouse;
 import flixel.util.typeLimit.NextState;
 import ui.FancyButton;
 import flixel.FlxG;
@@ -14,9 +15,7 @@ class MenuState extends FlxState
     var settingsButton:FlxSprite;
     var creditsButton:FlxSprite;
 
-    var mouseWasDownOnBtn:Map<String, Bool> = ["play" => false, "settings" => false, "credits" => false];
-
-    var bg:FlxSprite;
+    // var bg:FlxSprite;
     var fg:FlxSprite;
     var swipe:FlxSprite;
 
@@ -24,26 +23,31 @@ class MenuState extends FlxState
     {
         super.create();
 
-        bg = new FlxSprite(0, 0);
-        bg.loadGraphic("assets/images/ui/menu_bg.png");
-        add(bg);
+        FlxG.camera.bgColor.setRGB(128, 143, 135);
+
+        // bg = new FlxSprite(0, 0);
+        // bg.loadGraphic("assets/images/ui/menu_bg.png");
+        // add(bg);
 
         fg = new FlxSprite(-1280, 0);
         fg.loadGraphic("assets/images/ui/menu_fg.png");
         add(fg);
 
         playButtonNew = new FancyButton(1280, 400, "assets/images/ui/play_btn.png", () -> {
+            Mouse.setState(NORMAL);
             swipeStateSwitcher(PlayState.new);
         });
         add(playButtonNew);
 
         settingsButton = new FancyButton(20, 520, "assets/images/ui/settings_btn.png", () -> {
-            swipeStateSwitcher(SettingsState.new);
+            Mouse.setState(NORMAL);
+            FlxG.switchState(SettingsState.new);
         });
         add(settingsButton);
 
         creditsButton = new FancyButton(200, 520, "assets/images/ui/credits_btn.png", () -> {
-            swipeStateSwitcher(CreditsState.new);
+            Mouse.setState(NORMAL);
+            FlxG.switchState(CreditsState.new);
         });
         add(creditsButton);
 
