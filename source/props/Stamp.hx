@@ -22,6 +22,7 @@ class Stamp extends FlxSprite implements IDraggable
         initialX = x;
         initialY = y;
 
+        makeGraphic(132, 83, );
         loadGraphic('assets/images/stamp/stamp-${accept ? 'accept' : 'deny'}.png');
         stampGraphic = 'assets/images/stamp/stamp-${accept ? "good" : "bad"}.png';
     }

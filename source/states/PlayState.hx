@@ -31,7 +31,7 @@ class PlayState extends FlxState
     var concept:FlxSprite;
 
     var fishPos:FlxPoint;
-    var curFish:Fish;
+    public var curFish:Fish;
     var stampAccept:Stamp;
     var stampDeny:Stamp;
     public var stamps:FlxTypedGroup<FlxSprite>;
@@ -40,6 +40,7 @@ class PlayState extends FlxState
     var book:Document;
 
     var clock:FlxRadialGauge;
+    var plateArea:FlxSprite;
     var conveyorArea:FlxSprite;
     var trashArea:FlxSprite;
 
@@ -72,10 +73,6 @@ class PlayState extends FlxState
         concept = new FlxSprite(0, 0).loadGraphic("assets/images/desk.png");
         add(concept);
 
-        curFish = new Fish(229, 194, FishData.random());
-        curFish.visible = false;
-        addDraggable(curFish);
-
         infoPaper = new Document(778, 54, PAPER);
         add(infoPaper);
 
@@ -96,6 +93,14 @@ class PlayState extends FlxState
 
         stampDeny = new Stamp(365, 598, false);
         addDraggable(stampDeny);
+
+        curFish = new Fish(229, 194, FishData.random());
+        curFish.visible = false;
+        addDraggable(curFish);
+
+        plateArea = new FlxSprite(176, 76).makeGraphic(580, 510, FlxColor.WHITE);
+        plateArea.alpha = 0;
+        add(plateArea);
 
         conveyorArea = new FlxSprite(0, 0).makeGraphic(180, 500, FlxColor.WHITE);
         conveyorArea.x = FlxG.width - conveyorArea.width;
@@ -231,6 +236,15 @@ class PlayState extends FlxState
                 {
                     conveyorArea.alpha = 0;
                 }
+
+                if (FlxG.mouse.overlaps(plateArea))
+                {
+                    plateArea.alpha = 0.6;
+                }
+                else
+                {
+                    plateArea.alpha = 0;
+                }
             }
 
             if (FlxG.mouse.justPressed)
@@ -253,7 +267,7 @@ class PlayState extends FlxState
                 else if (obj is Fish)
                 {
                     // TODO: Check trash & plate
-                    if (!FlxG.mouse.overlaps(conveyorArea) && !FlxG.mouse.overlaps(trashArea))
+                    if (!FlxG.mouse.overlaps(conveyorArea) && !FlxG.mouse.overlaps(trashArea) && !FlxG.mouse.overlaps(plateArea))
                     {
                         // TODO: sound
                         return;
@@ -268,6 +282,10 @@ class PlayState extends FlxState
                         {
                             trash();
                         }
+                        else if (FlxG.mouse.overlaps(plateArea))
+                        {
+                            curFish.setPosition(fishPos.x, fishPos.y);
+                        }
                     }
                 }
 
@@ -275,6 +293,10 @@ class PlayState extends FlxState
                 curHoldingOffsetX = 0;
                 curHoldingOffsetY = 0;
                 skipInteractionsForAFrame = true;
+
+                conveyorArea.alpha = 0;
+                plateArea.alpha = 0;
+                trashArea.alpha = 0;
             }
         }
     }
@@ -287,11 +309,12 @@ class PlayState extends FlxState
 
     function startInspection():Void
     {
-        // TODO: randomize
         interactionsAllowed = false;
         fishTakenCareOf = false;
-        maxTime = 160;
+        maxTime = FlxG.random.float(Constants.TIME_MIN, Constants.TIME_MAX);
         curTime = 0;
+
+        trace(maxTime);
 
         curFish.dragAllowed = false;
         curFish.loadFromData(FishData.random());

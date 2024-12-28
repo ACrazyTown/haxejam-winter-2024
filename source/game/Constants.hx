@@ -19,6 +19,8 @@ class Constants
     inline public static final MAX_PENALTIES:Int = 3;
 
     inline public static final TIME_MAX_DANGER:Int = 10;
+    inline public static final TIME_MIN:Int = 120;
+    inline public static final TIME_MAX:Int = 240;
 
     inline public static final SCORE_BASE:Int = 50;
     inline public static final SCORE_PENALTY:Int = -100;
