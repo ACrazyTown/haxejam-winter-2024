@@ -53,7 +53,10 @@ class Phone extends FlxSpriteContainer
             sndHappy.play();
             screen.loadGraphic("assets/images/phone1.png");
         });
-        new FlxTimer().start(5, (_) -> {
+        new FlxTimer().start(4, (_) -> {
+            screen.loadGraphic("assets/images/phone4.png");
+        });
+        new FlxTimer().start(7, (_) -> {
             screen.loadGraphic("assets/images/phone3.png");
         });
     }
@@ -68,7 +71,10 @@ class Phone extends FlxSpriteContainer
             sndMad.play();
             screen.loadGraphic("assets/images/phone2.png");
         });
-        new FlxTimer().start(5, (_) -> {
+        new FlxTimer().start(4, (_) -> {
+            screen.loadGraphic("assets/images/phone5.png");
+        });
+        new FlxTimer().start(7, (_) -> {
             screen.loadGraphic("assets/images/phone3.png");
         });
     }
