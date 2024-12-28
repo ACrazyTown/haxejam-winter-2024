@@ -1,5 +1,7 @@
 package states;
 
+import flixel.util.FlxTimer;
+import props.Phone;
 import states.substate.EndingSubState;
 import flixel.sound.FlxSound;
 import flixel.math.FlxPoint;
@@ -38,6 +40,7 @@ class PlayState extends FlxState
     var infoPaper:Document;
     var checklist:Document;
     var book:Document;
+    var phone:Phone;
 
     var clock:FlxRadialGauge;
     var plateArea:FlxSprite;
@@ -83,6 +86,9 @@ class PlayState extends FlxState
 
         book = new Document(796, 424, BOOK);
         add(book);
+
+        phone = new Phone(10, 450);
+        add(phone);
 
         var stampUnderside:FlxSprite = new FlxSprite(240, 585).loadGraphic("assets/images/stamp/underside.png");
         add(stampUnderside);
@@ -150,6 +156,14 @@ class PlayState extends FlxState
                 }
             }
         );
+        
+        new FlxTimer().start(2, (_) -> {
+            phone.doHappy();
+        });
+        
+        new FlxTimer().start(12, (_) -> {
+            phone.doMad();
+        });
     }
 
     public var interactionsAllowed:Bool = false;
