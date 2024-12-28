@@ -42,6 +42,7 @@ class PlayState extends FlxState
     var book:Document;
     var phone:Phone;
 
+    var clockBg:FlxSprite;
     var clock:FlxRadialGauge;
     var plateArea:FlxSprite;
     var conveyorArea:FlxSprite;
@@ -117,8 +118,11 @@ class PlayState extends FlxState
         trashArea.alpha = 0;
         add(trashArea);
 
-        clock = new FlxRadialGauge(0, 0);
-        clock.makeShapeGraphic(CIRCLE, 50, 0, FlxColor.BLACK);
+        clockBg = new FlxSprite(-25, -25, "assets/images/ui/stopwatch.png");
+        add(clockBg);
+
+        clock = new FlxRadialGauge(24, 37);
+        clock.makeShapeGraphic(CIRCLE, 42, 0, FlxColor.fromRGB(133, 100, 67));
         add(clock);
 
         draggableObjects.reverse();
