@@ -12,7 +12,7 @@ import flixel.tweens.FlxTween;
 class MenuState extends FlxState
 {
     var playButton:FlxSprite;
-    var mouseWasDownOnPlayBtn:Bool = false;
+    var mouseWasDownOnBtn:Map<String, Bool> = ["play" => false, "credits" => false, "settings" => false];
     var bg:FlxSprite;
     var fg:FlxSprite;
     var swipe:FlxSprite;
@@ -33,45 +33,39 @@ class MenuState extends FlxState
         playButton.loadGraphic("assets/images/ui/play_btn.png");
         add(playButton);
 
-        FlxMouseEvent.add(playButton, playBtnOnMouseDown, playBtnOnMouseUp, playBtnOnMouseOver, playBtnOnMouseOut);
-
         swipe = new FlxSprite(1280, 0);
         swipe.loadGraphic("assets/images/ui/start_screen_swipe.png");
         add(swipe);
 
+        FlxMouseEvent.add(
+            playButton,
+            (pb:FlxSprite) -> { // down
+                mouseWasDownOnBtn.set("play", true);
+                BtnAnim.onMouseDown(pb);
+            },
+            (pb:FlxSprite) -> { // up
+                if (mouseWasDownOnBtn.get("play"))
+                {
+                    FlxTween.tween(swipe, {x: -520}, 1, {
+                        ease: FlxEase.cubeOut,
+                        onComplete:
+                        (_) -> FlxG.switchState(PlayState.new)
+                    });
+                }
+                BtnAnim.onMouseUp(pb);
+            },
+            (pb:FlxSprite) -> { // over
+                Mouse.setState(CLICKABLE);
+                BtnAnim.onMouseOver(pb);
+            },
+            (pb:FlxSprite) -> { // out
+                Mouse.setState(NORMAL);
+                mouseWasDownOnBtn.set("play", false);
+                BtnAnim.onMouseOut(pb);
+            }
+        );
+
         FlxTween.tween(fg, {x: 0}, 1, {ease: FlxEase.cubeOut});
         FlxTween.tween(playButton, {x: 650}, 1, {ease: FlxEase.cubeOut});
-    }
-
-    function playBtnOnMouseDown(playButton:FlxSprite)
-    {
-        mouseWasDownOnPlayBtn = true;
-        BtnAnim.onMouseDown(playButton);
-    }
-
-    function playBtnOnMouseUp(playButton:FlxSprite)
-    {
-        if (mouseWasDownOnPlayBtn)
-        {
-            FlxTween.tween(swipe, {x: -520}, 1, {
-                ease: FlxEase.cubeOut,
-                onComplete:
-                (_) -> FlxG.switchState(PlayState.new)
-            });
-        }
-        BtnAnim.onMouseUp(playButton);
-    }
-
-    function playBtnOnMouseOver(playButton:FlxSprite)
-    {
-        Mouse.setState(CLICKABLE);
-        BtnAnim.onMouseOver(playButton);
-    }
-
-    function playBtnOnMouseOut(playButton:FlxSprite)
-    {
-        Mouse.setState(NORMAL);
-        mouseWasDownOnPlayBtn = false;
-        BtnAnim.onMouseOut(playButton);
     }
 }
