@@ -41,10 +41,10 @@ Overlock -- https://fonts.google.com/specimen/Overlock -- Copyright (c) 2011, Da
         // creditsText.color = FlxColor.fromRGB(64, 40, 16);
         creditsText.font = "Overlock Regular";
         creditsText.screenCenter();
-        // creditsText.y += 60;
+        creditsText.y += 60;
         add(creditsText);
 
-        closeBtn = new FancyButton(1000, 10, "assets/images/ui/close.png", () -> {
+        closeBtn = new FancyButton(10, 10, "assets/images/ui/arrow.png", () -> {
             Mouse.setState(NORMAL);
             FlxG.switchState(MenuState.new);
         });
