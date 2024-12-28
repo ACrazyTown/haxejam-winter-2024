@@ -1,6 +1,5 @@
 package states;
 
-import ui.BtnAnim;
 import ui.Mouse;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -49,83 +48,56 @@ class MenuState extends FlxState
         swipe.loadGraphic("assets/images/ui/start_screen_swipe.png");
         add(swipe);
 
-        FlxMouseEvent.add( // play
-            playButton,
-            (btn:FlxSprite) -> { // down
-                mouseWasDownOnBtn.set("play", true);
-                BtnAnim.onMouseDown(btn);
-            },
-            (btn:FlxSprite) -> { // up
-                if (mouseWasDownOnBtn.get("play"))
-                {
-                    FlxTween.tween(swipe, {x: -520}, 1, {
-                        ease: FlxEase.cubeOut,
-                        onComplete:
-                        (_) -> FlxG.switchState(PlayState.new)
-                    });
-                }
-                BtnAnim.onMouseUp(btn);
-            },
-            (btn:FlxSprite) -> { // over
-                Mouse.setState(CLICKABLE);
-                BtnAnim.onMouseOver(btn);
-            },
-            (btn:FlxSprite) -> { // out
-                Mouse.setState(NORMAL);
-                mouseWasDownOnBtn.set("play", false);
-                BtnAnim.onMouseOut(btn);
-            }
-        );
-
-        FlxMouseEvent.add( // settings
-            settingsButton,
-            (btn:FlxSprite) -> { // down
-                mouseWasDownOnBtn.set("settings", true);
-                BtnAnim.onMouseDown(btn);
-            },
-            (btn:FlxSprite) -> { // up
-                if (mouseWasDownOnBtn.get("settings"))
-                {
-                    trace("settings pressed");
-                }
-                BtnAnim.onMouseUp(btn);
-            },
-            (btn:FlxSprite) -> { // over
-                Mouse.setState(CLICKABLE);
-                BtnAnim.onMouseOver(btn);
-            },
-            (btn:FlxSprite) -> { // out
-                Mouse.setState(NORMAL);
-                mouseWasDownOnBtn.set("settings", false);
-                BtnAnim.onMouseOut(btn);
-            }
-        );
-
-        FlxMouseEvent.add( // credits
-            creditsButton,
-            (btn:FlxSprite) -> { // down
-                mouseWasDownOnBtn.set("credits", true);
-                BtnAnim.onMouseDown(btn);
-            },
-            (btn:FlxSprite) -> { // up
-                if (mouseWasDownOnBtn.get("credits"))
-                {
-                    trace("credits pressed");
-                }
-                BtnAnim.onMouseUp(btn);
-            },
-            (btn:FlxSprite) -> { // over
-                Mouse.setState(CLICKABLE);
-                BtnAnim.onMouseOver(btn);
-            },
-            (btn:FlxSprite) -> { // out
-                Mouse.setState(NORMAL);
-                mouseWasDownOnBtn.set("credits", false);
-                BtnAnim.onMouseOut(btn);
-            }
-        );
+        btn_mouseEventSetup(playButton, "play", () -> {
+            FlxTween.tween(swipe, {x: -520}, 1, {
+                ease: FlxEase.cubeOut,
+                onComplete:
+                (_) -> FlxG.switchState(PlayState.new)
+            });
+        });
+        
+        btn_mouseEventSetup(settingsButton, "settings", () -> {
+            trace("settings clicked (newer)");
+        });
+        
+        btn_mouseEventSetup(creditsButton, "credits", () -> {
+            trace("credits clicked (newer)");
+        });
 
         FlxTween.tween(fg, {x: 0}, 1, {ease: FlxEase.cubeOut});
         FlxTween.tween(playButton, {x: 650}, 1, {ease: FlxEase.cubeOut});
+    }
+
+    function btn_mouseEventSetup(button:FlxSprite, btnName:String, onClick:Null<Void -> Void>)
+    {
+        FlxMouseEvent.add(
+            button,
+            (btn:FlxSprite) -> { // down
+                mouseWasDownOnBtn.set(btnName, true);
+
+                FlxTween.tween(btn, {"scale.x": 0.85, "scale.y": 0.85}, 0.25, {ease: FlxEase.cubeOut});
+            },
+            (btn:FlxSprite) -> { // up
+                if (mouseWasDownOnBtn.get(btnName))
+                {
+                    onClick();
+                }
+
+                FlxTween.tween(btn, {"scale.x": 1, "scale.y": 1}, 0.25, {ease: FlxEase.cubeOut});
+            },
+            (btn:FlxSprite) -> { // over
+                Mouse.setState(CLICKABLE);
+
+                FlxTween.angle(btn, 0, -10, 0.25, {ease: FlxEase.cubeOut});
+                FlxTween.tween(btn, {"scale.x": 1.2, "scale.y": 1.2}, 0.25, {ease: FlxEase.cubeOut});
+            },
+            (btn:FlxSprite) -> { // out
+                Mouse.setState(NORMAL);
+                mouseWasDownOnBtn.set(btnName, false);
+
+                FlxTween.angle(btn, -10, 0, 0.25, {ease: FlxEase.cubeOut});
+                FlxTween.tween(btn, {"scale.x": 1, "scale.y": 1}, 0.25, {ease: FlxEase.cubeOut});
+            }
+        );
     }
 }
