@@ -156,14 +156,6 @@ class PlayState extends FlxState
                 }
             }
         );
-        
-        new FlxTimer().start(2, (_) -> {
-            phone.doHappy();
-        });
-        
-        new FlxTimer().start(12, (_) -> {
-            phone.doMad();
-        });
     }
 
     public var interactionsAllowed:Bool = false;
