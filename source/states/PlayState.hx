@@ -63,6 +63,8 @@ class PlayState extends FlxState
     var curHoldingOffsetX:Float = 0;
     var curHoldingOffsetY:Float = 0;
 
+    var bombSfx:FlxSound;
+
     override public function create()
     {
         instance = this;
@@ -334,6 +336,13 @@ class PlayState extends FlxState
             dimOverlay.alpha = 0.7;
         }
 
+        if (curFish.data.bomb)
+        {
+            bombSfx = FlxG.sound.load("assets/sounds/fuse");
+            bombSfx.play();
+            bombSfx.fadeIn(2.5);
+        }
+
         if (fishPos != null)
             fishPos.put();
         fishPos = MathUtil.centerToArea(FlxRect.get(0, 0, curFish.width, curFish.height), FlxRect.get(200, 110, 520, 420), XY);
@@ -373,6 +382,11 @@ class PlayState extends FlxState
         if (curFish.data.evil)
         {
             openSubState(new EndingSubState(EVIL));
+        }
+        if (curFish.data.bomb)
+        {
+            bombSfx.stop();
+            openSubState(new EndingSubState(EXPLODE));
         }
 
         if (penaltiesReceived > Constants.MAX_PENALTIES)
@@ -427,6 +441,15 @@ class PlayState extends FlxState
             else
             {
                 openSubState(new EndingSubState(EVIL));
+            }
+        }
+
+        if (curFish.data.bomb)
+        {
+            bombSfx.stop();
+            if (!trashed)
+            {   
+                openSubState(new EndingSubState(EXPLODE));
             }
         }
     }
