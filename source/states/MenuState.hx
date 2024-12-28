@@ -1,16 +1,15 @@
 package states;
 
-import ui.Mouse;
+import ui.FancyButton;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
-import flixel.input.mouse.FlxMouseEvent;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 
 class MenuState extends FlxState
 {
-    var playButton:FlxSprite;
+    var playButtonNew:FancyButton;
     var settingsButton:FlxSprite;
     var creditsButton:FlxSprite;
 
@@ -32,72 +31,30 @@ class MenuState extends FlxState
         fg.loadGraphic("assets/images/ui/menu_fg.png");
         add(fg);
 
-        playButton = new FlxSprite(1280, 400);
-        playButton.loadGraphic("assets/images/ui/play_btn.png");
-        add(playButton);
-
-        settingsButton = new FlxSprite(20, 520);
-        settingsButton.loadGraphic("assets/images/ui/settings_btn.png");
-        add(settingsButton);
-
-        creditsButton = new FlxSprite(200, 520);
-        creditsButton.loadGraphic("assets/images/ui/credits_btn.png");
-        add(creditsButton);
-
-        swipe = new FlxSprite(1280, 0);
-        swipe.loadGraphic("assets/images/ui/start_screen_swipe.png");
-        add(swipe);
-
-        btn_mouseEventSetup(playButton, "play", () -> {
+        playButtonNew = new FancyButton(1280, 400, "assets/images/ui/play_btn.png", () -> {
             FlxTween.tween(swipe, {x: -520}, 1, {
                 ease: FlxEase.cubeOut,
                 onComplete:
                 (_) -> FlxG.switchState(PlayState.new)
             });
         });
-        
-        btn_mouseEventSetup(settingsButton, "settings", () -> {
-            trace("settings clicked (newer)");
+        add(playButtonNew);
+
+        settingsButton = new FancyButton(20, 520, "assets/images/ui/settings_btn.png", () -> {
+            // ...
         });
-        
-        btn_mouseEventSetup(creditsButton, "credits", () -> {
-            trace("credits clicked (newer)");
+        add(settingsButton);
+
+        creditsButton = new FancyButton(200, 520, "assets/images/ui/credits_btn.png", () -> {
+            // ...
         });
+        add(creditsButton);
+
+        swipe = new FlxSprite(1280, 0);
+        swipe.loadGraphic("assets/images/ui/start_screen_swipe.png");
+        add(swipe);
 
         FlxTween.tween(fg, {x: 0}, 1, {ease: FlxEase.cubeOut});
-        FlxTween.tween(playButton, {x: 650}, 1, {ease: FlxEase.cubeOut});
-    }
-
-    function btn_mouseEventSetup(button:FlxSprite, btnName:String, onClick:Null<Void -> Void>)
-    {
-        FlxMouseEvent.add(
-            button,
-            (btn:FlxSprite) -> { // down
-                mouseWasDownOnBtn.set(btnName, true);
-
-                FlxTween.tween(btn, {"scale.x": 0.85, "scale.y": 0.85}, 0.25, {ease: FlxEase.cubeOut});
-            },
-            (btn:FlxSprite) -> { // up
-                if (mouseWasDownOnBtn.get(btnName))
-                {
-                    onClick();
-                }
-
-                FlxTween.tween(btn, {"scale.x": 1, "scale.y": 1}, 0.25, {ease: FlxEase.cubeOut});
-            },
-            (btn:FlxSprite) -> { // over
-                Mouse.setState(CLICKABLE);
-
-                FlxTween.angle(btn, 0, -10, 0.25, {ease: FlxEase.cubeOut});
-                FlxTween.tween(btn, {"scale.x": 1.2, "scale.y": 1.2}, 0.25, {ease: FlxEase.cubeOut});
-            },
-            (btn:FlxSprite) -> { // out
-                Mouse.setState(NORMAL);
-                mouseWasDownOnBtn.set(btnName, false);
-
-                FlxTween.angle(btn, -10, 0, 0.25, {ease: FlxEase.cubeOut});
-                FlxTween.tween(btn, {"scale.x": 1, "scale.y": 1}, 0.25, {ease: FlxEase.cubeOut});
-            }
-        );
+        FlxTween.tween(playButtonNew, {x: 650}, 1, {ease: FlxEase.cubeOut});
     }
 }
