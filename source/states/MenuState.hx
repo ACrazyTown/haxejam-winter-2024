@@ -12,7 +12,6 @@ import flixel.tweens.FlxTween;
 class MenuState extends FlxState
 {
     var playButtonNew:FancyButton;
-    var settingsButton:FlxSprite;
     var creditsButton:FlxSprite;
 
     // var bg:FlxSprite;
@@ -39,13 +38,7 @@ class MenuState extends FlxState
         });
         add(playButtonNew);
 
-        settingsButton = new FancyButton(20, 520, "assets/images/ui/settings_btn.png", () -> {
-            Mouse.setState(NORMAL);
-            FlxG.switchState(SettingsState.new);
-        });
-        add(settingsButton);
-
-        creditsButton = new FancyButton(200, 520, "assets/images/ui/credits_btn.png", () -> {
+        creditsButton = new FancyButton(20, 520, "assets/images/ui/credits_btn.png", () -> {
             Mouse.setState(NORMAL);
             FlxG.switchState(CreditsState.new);
         });
