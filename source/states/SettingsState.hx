@@ -14,7 +14,7 @@ class SettingsState extends FlxState
         stubText.screenCenter();
         add(stubText);
 
-		super.create();
+        super.create();
     }
 
     override public function update(elapsed:Float) {
