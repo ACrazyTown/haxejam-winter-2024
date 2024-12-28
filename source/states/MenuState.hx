@@ -14,7 +14,7 @@ class MenuState extends FlxState
     var playButtonNew:FancyButton;
     var creditsButton:FlxSprite;
 
-    // var bg:FlxSprite;
+    var bg:FlxSprite;
     var fg:FlxSprite;
     var swipe:FlxSprite;
 
@@ -24,9 +24,9 @@ class MenuState extends FlxState
 
         FlxG.camera.bgColor.setRGB(128, 143, 135);
 
-        // bg = new FlxSprite(0, 0);
-        // bg.loadGraphic("assets/images/ui/menu_bg.png");
-        // add(bg);
+        bg = new FlxSprite(0, 0);
+        bg.loadGraphic("assets/images/ui/menu_bg.png");
+        add(bg);
 
         fg = new FlxSprite(-1280, 0);
         fg.loadGraphic("assets/images/ui/menu_fg.png");

@@ -17,7 +17,6 @@ class CreditsState extends FlxState
     override public function create()
     {
         titleText = new FlxText(0, 0, 0, "Credits", 70);
-        // titleText.color = FlxColor.fromRGB(64, 40, 16);
         titleText.font = "Overlock Black";
         titleText.screenCenter();
         titleText.y = 40;
@@ -38,7 +37,6 @@ phone short buzz by richwise -- https://freesound.org/s/476836/ -- License: Crea
 
 --- Fonts ---
 Overlock -- https://fonts.google.com/specimen/Overlock -- Copyright (c) 2011, Dario Manuel Muhafara -- SIL Open Font License", 25);
-        // creditsText.color = FlxColor.fromRGB(64, 40, 16);
         creditsText.font = "Overlock Regular";
         creditsText.screenCenter();
         creditsText.y += 60;
