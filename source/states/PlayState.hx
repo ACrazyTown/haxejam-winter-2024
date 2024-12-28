@@ -120,6 +120,9 @@ class PlayState extends FlxState
         // startTutorial();
         // startInspection();
 
+        FlxG.random.resetInitialSeed();
+        trace("RNG seed: " + FlxG.random.initialSeed);
+
         // TODO: Finalized track, add .mp3 for web
         FlxG.sound.playMusic("assets/music/test1a", 0.5);
         // FlxG.sound.music.fadeIn(2, 0, 0.7);

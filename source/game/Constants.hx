@@ -2,7 +2,6 @@ package game;
 
 import util.macro.AbstractEnumTools;
 import props.fish.FishData;
-import props.fish.FishDecoration;
 import props.fish.FishKind;
 import props.fish.FishLocation;
 
@@ -26,7 +25,6 @@ class Constants
     inline public static final SCORE_PENALTY:Int = -100;
     inline public static final SCORE_MAX_BONUS:Int = 200;
 
-    public static final FISH_DECORATIONS:Array<Int> = AbstractEnumTools.getValues(FishDecoration);
     public static final FISH_KINDS:Array<String> = AbstractEnumTools.getValues(FishKind);
     public static final FISH_LOCATIONS:Array<String> = AbstractEnumTools.getValues(FishLocation);
     
