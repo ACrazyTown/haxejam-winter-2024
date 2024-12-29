@@ -364,7 +364,7 @@ class PlayState extends FlxState
         var reallyEasy = FlxG.random.bool(Constants.EZ_MODE_CHANCE);
         if (allCorrect)
         {
-            trace("all correct btw");
+            // trace("all correct btw");
             // only add color questions if there's a color modifier
             if (curFish.data.color != null)
                 checklistQuestions.push({q: colors[0], inverse: !colors[0].func(curFish.data)});
@@ -397,7 +397,7 @@ class PlayState extends FlxState
 
         // shuffle for random order
         FlxG.random.shuffle(checklistQuestions);
-        trace(checklistQuestions);
+        // trace(checklistQuestions);
 
         if (curFish.data.evil || curFish.data.bomb)
             maxTime = Constants.TIME_MAX_DANGER;
@@ -488,7 +488,7 @@ class PlayState extends FlxState
         var distance:Float = Math.abs(-curFish.height - curFish.y);
         var speed:Float = distance / 2;
         var duration:Float = distance / speed;
-        trace(duration);
+        // trace(duration);
         FlxTween.tween(curFish, {y: -curFish.height * 2}, duration, {onComplete: (_) ->
         {
             conveyorSound.fadeOut(0.5, 0, (_) ->
@@ -531,7 +531,7 @@ class PlayState extends FlxState
         var finalDecision:Bool = true;
         if (trashed)
         {
-            trace(finalDecision);
+            // trace(finalDecision);
             if (!curFish.data.evil && !curFish.data.bomb)
             {
                 // autofail if we trash something that shouldn't have been trashed
@@ -540,16 +540,16 @@ class PlayState extends FlxState
         }
         else
         {
-            trace(finalDecision);
+            // trace(finalDecision);
             if (!curFish.data.evil && !curFish.data.bomb)
             {
-                trace("testing");
+                // trace("testing");
                 var passesRequirements:Bool = true;
                 for (que in checklistQuestions)
                 {
-                    trace(que.q.title);
-                    trace(que.q.titleOpposite);
-                    trace(que.inverse);
+                    // trace(que.q.title);
+                    // trace(que.q.titleOpposite);
+                    // trace(que.inverse);
                     
                     var testResult = que.q.func(curFish.data);
                     if (que.inverse)
@@ -566,6 +566,9 @@ class PlayState extends FlxState
                 if (stampsGood == 0 && stampsBad == 0)
                     finalDecision = false;
                 else if ((stampAccepted && !passesRequirements) || (!stampAccepted && passesRequirements))
+                    finalDecision = false;
+
+                if (curFish.data.poisonous && stampAccepted)
                     finalDecision = false;
             }
         }
