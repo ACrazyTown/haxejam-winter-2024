@@ -357,6 +357,9 @@ class PlayState extends FlxState
         FlxG.random.shuffle(ezmix);
 
         var allCorrect = FlxG.random.bool(Constants.ALL_CORRECT_CHANCE);
+        if (curFish.data.location == NUCLEAR_WASTELAND)
+            allCorrect = false;
+
         var reallyEasy = FlxG.random.bool(Constants.EZ_MODE_CHANCE);
         if (allCorrect)
         {
@@ -367,13 +370,13 @@ class PlayState extends FlxState
             else
                 checklistQuestions.push({q: misc[0], inverse: !misc[0].func(curFish.data)});
 
-            checklistQuestions.push({q: misc[1], inverse: !misc[0].func(curFish.data)});
-            checklistQuestions.push({q: misc[2], inverse: !misc[1].func(curFish.data)});
+            checklistQuestions.push({q: misc[1], inverse: !misc[1].func(curFish.data)});
+            checklistQuestions.push({q: misc[2], inverse: !misc[2].func(curFish.data)});
 
             if (reallyEasy)
                 checklistQuestions.push({q: ezmix[0], inverse: !ezmix[0].func(curFish.data)});
             else
-                checklistQuestions.push({q: misc[3], inverse: !misc[2].func(curFish.data)});
+                checklistQuestions.push({q: misc[3], inverse: !misc[3].func(curFish.data)});
         }
         else
         {
