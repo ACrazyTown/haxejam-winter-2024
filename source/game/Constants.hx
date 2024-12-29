@@ -187,7 +187,7 @@ class Constants
             func: ChecklistQuestions.meows
         },
         {
-            title: "Is a saltwater fish?",
+            title: "Is it a saltwater fish?",
             titleOpposite: "Is it a freshwater fish?",
             func: ChecklistQuestions.isSaltwater
         },
