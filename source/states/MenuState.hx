@@ -13,6 +13,7 @@ class MenuState extends FlxState
 {
     var playButtonNew:FancyButton;
     var creditsButton:FlxSprite;
+    var creditsPoint:FlxSprite;
 
     var bg:FlxSprite;
     var fg:FlxSprite;
@@ -43,6 +44,9 @@ class MenuState extends FlxState
             FlxG.switchState(CreditsState.new);
         });
         add(creditsButton);
+
+        creditsPoint = new FlxSprite(115, 445, "assets/images/ui/credits_point.png");
+        add(creditsPoint);
 
         swipe = new FlxSprite(1280, 0);
         swipe.loadGraphic("assets/images/ui/start_screen_swipe.png");

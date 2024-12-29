@@ -86,7 +86,7 @@ class TutorialSubstate extends FlxSubState
                             ease: FlxEase.cubeOut, 
                             onComplete: onTutorialEnd
                         });
-                        FlxTween.tween(pressPrompt, {x: -541}, 1, {ease: FlxEase.cubeOut});
+                        FlxTween.tween(pressPrompt, {x: -628}, 1, {ease: FlxEase.cubeOut});
                     }
                 }
             );
