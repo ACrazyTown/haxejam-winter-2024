@@ -1,5 +1,6 @@
 package util.macro;
 
+import haxe.io.Bytes;
 #if macro
 import sys.io.File;
 #end
@@ -9,10 +10,18 @@ using StringTools;
 
 class CreditsMacro
 {
-    public static macro function getCreditsText():ExprOf<String>
+    public static macro function getCreditsText():ExprOf<Array<String>>
     {
-        var credits:String = File.getContent("./CREDITS.md");
-        credits = credits.split("\n").join("");
-        return macro $v{credits};
+        // Sorry.
+        var credits:String = File.getContent("./CREDITS.md").trim();
+        var splitCredits = credits.split("\n");
+        var toReturn = [];
+        for (c in splitCredits)
+        {
+            var trimmed = c.trim();
+            if (trimmed.length != 0)
+                toReturn.push(c.trim());
+        }
+        return macro $v{toReturn};
     }
 }

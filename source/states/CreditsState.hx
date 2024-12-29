@@ -23,12 +23,21 @@ class CreditsState extends FlxState
         titleText.y = 40;
         add(titleText);
 
-        creditsText = new FlxText(0, 0, 0, CreditsMacro.getCreditsText(), 20);
-        creditsText.fieldWidth = 800;
+        creditsText = new FlxText(0, 0, 0, "", 20);
+        creditsText.fieldWidth = 1000;
         creditsText.font = "Overlock Regular";
-        creditsText.screenCenter();
-        creditsText.y += 60;
+        // creditsText.y += 60;
         add(creditsText);
+
+        var creditsData = CreditsMacro.getCreditsText();
+        for (i in 0...creditsData.length)
+        {
+            creditsText.text += creditsData[i];
+            if (i != creditsData.length)
+                creditsText.text += "\n";
+        }
+
+        creditsText.screenCenter();
 
         closeBtn = new FancyButton(10, 10, "assets/images/ui/arrow_left.png", () -> {
             Mouse.setState(NORMAL);
