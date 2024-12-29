@@ -53,7 +53,8 @@
     <!-- ______________________________ Haxedefines _____________________________ -->
 
     <!--Automatically append extension to sound files-->
-    <haxedef name="FLX_DEFAULT_SOUND_EXT" />
+    <haxedef name="FLX_DEFAULT_SOUND_EXT" value="mp3" if="web"/>
+    <haxedef name="FLX_DEFAULT_SOUND_EXT" value="ogg" unless="web"/>
 
     <!--Remove the legacy health system-->
     <haxedef name="FLX_NO_HEALTH" />
