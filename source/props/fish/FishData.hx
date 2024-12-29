@@ -18,7 +18,7 @@ class FishData
 
         var poisonous = location == FishLocation.NUCLEAR_WASTELAND || kind == FishKind.PUFFER;
         var evil = FlxG.random.bool(5);
-        var bomb = FlxG.random.bool(15);
+        var bomb = evil ? false : FlxG.random.bool(15);
 
         var color:Null<FlxColor> = null;
         if (kind != FishKind.SALMON && kind != FishKind.CARDBOARD && !bomb)

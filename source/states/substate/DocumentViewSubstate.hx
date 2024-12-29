@@ -1,5 +1,6 @@
 package states.substate;
 
+import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.text.FlxText;
 import flixel.tweens.FlxTween;
 import ui.FancyButton;
@@ -34,6 +35,8 @@ class DocumentViewSubstate extends FlxSubState
         "I like this one.",
         "Once upon a time there was a fish. This is its info:"
     ];
+
+    var checkmarkTxtGroup:FlxTypedGroup<FlxText>;
 
     public function new(type:DocumentType, parent:Document)
     {
@@ -86,6 +89,18 @@ class DocumentViewSubstate extends FlxSubState
 
                 header = new FlxSprite(bg.x + 20, bg.y + 20).loadGraphic("assets/images/ui/check_list.png");
                 add(header);
+
+                checkmarkTxtGroup = new FlxTypedGroup<FlxText>();
+                add(checkmarkTxtGroup);
+
+                var i = 0;
+                for (que in PlayState.instance.checklistQuestions)
+                {
+                    var txt:FlxText = new FlxText(header.x, (header.y + header.height) + i * 60, que.inverse ? que.q.titleOpposite : que.q.title, 24);
+                    checkmarkTxtGroup.add(txt);
+
+                    i++;
+                }
 
             case BOOK:
                 bg.makeGraphic(500, 700);

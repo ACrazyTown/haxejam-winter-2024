@@ -127,6 +127,11 @@ class Constants
             title: "Is the fish poisonous?",
             titleOpposite: "Is the fish not poisonous?",
             func: ChecklistQuestions.isPoisonous
+        },
+        {
+            title: "Does the fish meow?",
+            titleOpposite: "Does the fish not meow?",
+            func: ChecklistQuestions.meows
         }
     ];
 }

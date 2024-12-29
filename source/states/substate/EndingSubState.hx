@@ -10,6 +10,7 @@ import flixel.util.FlxTimer;
 enum Ending
 {
     TOO_MANY_PENALTIES;
+    POISONED;
     EVIL;
     EXPLODE;
 }
@@ -32,6 +33,10 @@ class EndingSubState extends FlxSubState
         switch (ending)
         {
             case TOO_MANY_PENALTIES:
+                // TODO:
+
+            case POISONED:
+                // TODO:
 
             case EVIL:
                 bg = new FlxSprite().makeGraphic(1280, 720, FlxColor.BLACK);

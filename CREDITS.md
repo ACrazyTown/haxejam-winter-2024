@@ -31,3 +31,16 @@ fish slap ground or snow writhing wet.wav by kyles -- https://freesound.org/s/45
 
 # Fonts
 Overlock -- https://fonts.google.com/specimen/Overlock -- Copyright (c) 2011, Dario Manuel Muhafara -- SIL Open Font License
+
+# Stock photos
+https://unsplash.com/photos/a-large-body-of-water-surrounded-by-mountains-qiMaTNaLveU 
+
+https://unsplash.com/photos/boat-in-the-middle-of-river-during-daytime-y2jGyiT7Mzg 
+
+https://unsplash.com/photos/red-boat-on-blue-ocean-during-daytime-fj0tFloTPGQ 
+
+https://unsplash.com/photos/body-of-water-CTwQs8QKkE8 
+
+https://unsplash.com/photos/boats-parked-on-dock-during-daytime-9IPc_aZLd80
+
+https://www.pexels.com/photo/underground-lake-in-a-cave-13586950/

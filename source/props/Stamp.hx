@@ -18,12 +18,14 @@ class Stamp extends FlxSprite implements IDraggable
     public var initialY:Float;
 
     var stampGraphic:String;
+    var accept:Bool;
 
     public function new(x:Float = 0, y:Float = 0, accept:Bool)
     {
         super(x, y);
         initialX = x;
         initialY = y;
+        this.accept = accept;
 
         loadGraphic('assets/images/stamp/stamp-${accept ? 'accept' : 'deny'}.png');
         stampGraphic = 'assets/images/stamp/stamp-${accept ? "good" : "bad"}.png';
@@ -51,6 +53,11 @@ class Stamp extends FlxSprite implements IDraggable
             @:privateAccess
             PlayState.instance.curFish.stampBitmap.draw(bitmap, mat);
             PlayState.instance.curFish.applyMask();
+
+            if (accept)
+                PlayState.instance.stampsGood++;
+            else
+                PlayState.instance.stampsBad++;
         }
     }
 }

@@ -19,10 +19,13 @@ class Phone extends FlxSpriteContainer
     var sndHappy:FlxSound;
     var sndMad:FlxSound;
 
-	public function new(x:Float = 0, y:Float = 0)
+    var onSequenceComplete:Void->Void;
+
+	public function new(x:Float = 0, y:Float = 0, onSequenceComplete:Void->Void)
 	{
 		super(x, y);
-        
+        this.onSequenceComplete = onSequenceComplete;
+
         screen = new FlxSprite(3, 47, "assets/images/phone3.png");
         screen.scale = FlxPoint.weak(0.5, 0.5);
         screen.angle = -7;
@@ -58,6 +61,7 @@ class Phone extends FlxSpriteContainer
         });
         new FlxTimer().start(7, (_) -> {
             screen.loadGraphic("assets/images/phone3.png");
+            onSequenceComplete();
         });
     }
 
@@ -76,6 +80,7 @@ class Phone extends FlxSpriteContainer
         });
         new FlxTimer().start(7, (_) -> {
             screen.loadGraphic("assets/images/phone3.png");
+            onSequenceComplete();
         });
     }
 }
