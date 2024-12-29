@@ -53,6 +53,8 @@ class Startup extends FlxState
         #if debug
         DebugKeybindsPlugin.init();
         #end
+
+        FlxG.save.bind("ServeCatFishDish", "acrazytown");
     }
 
     function done():Void

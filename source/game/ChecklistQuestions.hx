@@ -107,4 +107,79 @@ class ChecklistQuestions
     {
         return data.kind == CAT;
     }
+
+    public static function isSaltwater(data:FishData):Bool
+    {
+        return data.saltwater;
+    }
+
+    public static function barks(data:FishData):Bool
+    {
+        return data.kind == DOG;
+    }
+
+    public static function isFlopper(data:FishData):Bool
+    {
+        return data.kind == FLOPPER;
+    }
+
+    public static function isNormal(data:FishData):Bool
+    {
+        return data.kind == NORMAL;
+    }
+
+    public static function isSalmon(data:FishData):Bool
+    {
+        return data.kind == SALMON;
+    }
+
+    public static function isChill(data:FishData):Bool
+    {
+        return data.kind == CHILL;
+    }
+
+    public static function isDapper(data:FishData):Bool
+    {
+        return data.kind == DAPPER;
+    }
+
+    public static function isBigKind(data:FishData):Bool
+    {
+        return data.kind == BIG;
+    }
+
+    public static function isSmallKind(data:FishData):Bool
+    {
+        return data.kind == SMALL;
+    }
+
+    public static function isCatfish(data:FishData):Bool
+    {
+        return data.kind == CAT;
+    }
+
+    public static function isDogfish(data:FishData):Bool
+    {
+        return data.kind == DOG;
+    }
+
+    public static function isPufferfish(data:FishData):Bool
+    {
+        return data.kind == PUFFER;
+    }
+
+    public static function isCardboard(data:FishData):Bool
+    {
+        return data.kind == CARDBOARD;
+    }
+
+    public static function isEdible(data:FishData):Bool
+    {
+        return data.kind != CARDBOARD;
+    }
+
+    public static function isOver10YearsOld(data:FishData):Bool
+    {
+        return data.age > 3650;
+    }
 }

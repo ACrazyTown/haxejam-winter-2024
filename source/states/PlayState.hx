@@ -53,7 +53,7 @@ class PlayState extends FlxState
     // gameplay logic
     var fishTakenCareOf:Bool = false;
     var inspecting:Bool = false;
-    var totalTime:Float;
+    public var totalTime:Float;
     var maxTime:Float;
     var curTime:Float;
     var penaltiesReceived:Int;
@@ -62,6 +62,7 @@ class PlayState extends FlxState
     public var stampsBad:Int = 0;
     public var checklistQuestions:Array<ActualQuestionUsedInGame> = [];
     public var checklistIntroText:Null<Int> = null;
+    public var checklistLastPage:Int = 1;
 
     var draggableObjects:Array<IDraggable>;
     public var curHolding:IDraggable;
@@ -69,6 +70,8 @@ class PlayState extends FlxState
     var curHoldingOffsetY:Float = 0;
 
     var bombSfx:FlxSound;
+
+    public var survivedRounds:Int = -1;
 
     override public function create()
     {
@@ -330,6 +333,7 @@ class PlayState extends FlxState
         maxTime = FlxG.random.float(Constants.TIME_MIN, Constants.TIME_MAX);
         curTime = 0;
         clock.amount = 1;
+        survivedRounds++;
 
         trace(maxTime);
 
@@ -342,27 +346,49 @@ class PlayState extends FlxState
 
         // generate checklist
         var colors = Constants.QUESTIONS_COLOR.copy();
-        var locations = Constants.QUESTIONS_LOCATION.copy();
         var misc = Constants.QUESTIONS_MISC.copy();
 
+        var locations = Constants.QUESTIONS_LOCATION.copy();
+        var kinds = Constants.QUESTIONS_KIND.copy();
+        var ezmix = locations.concat(kinds);
+
         FlxG.random.shuffle(colors);
-        FlxG.random.shuffle(locations);
         FlxG.random.shuffle(misc);
+        FlxG.random.shuffle(ezmix);
 
         var allCorrect = FlxG.random.bool(Constants.ALL_CORRECT_CHANCE);
+        var reallyEasy = FlxG.random.bool(Constants.EZ_MODE_CHANCE);
         if (allCorrect)
         {
+            trace("all correct btw");
             // only add color questions if there's a color modifier
             if (curFish.data.color != null)
-                checklistQuestions.push({q: colors[0], inverse: !colors[1].func(curFish.data)});
+                checklistQuestions.push({q: colors[0], inverse: !colors[0].func(curFish.data)});
+            else
+                checklistQuestions.push({q: misc[0], inverse: !misc[0].func(curFish.data)});
 
-            checklistQuestions.push({q: misc[0], inverse: !misc[0].func(curFish.data)});
-            checklistQuestions.push({q: misc[1], inverse: !misc[1].func(curFish.data)});
-            checklistQuestions.push({q: misc[2], inverse: !misc[2].func(curFish.data)});
+            checklistQuestions.push({q: misc[1], inverse: !misc[0].func(curFish.data)});
+            checklistQuestions.push({q: misc[2], inverse: !misc[1].func(curFish.data)});
+
+            if (reallyEasy)
+                checklistQuestions.push({q: ezmix[0], inverse: !ezmix[0].func(curFish.data)});
+            else
+                checklistQuestions.push({q: misc[3], inverse: !misc[2].func(curFish.data)});
         }
         else
         {
-            
+            if (curFish.data.color != null)
+                checklistQuestions.push({q: colors[0], inverse: FlxG.random.bool()});
+            else
+                checklistQuestions.push({q: misc[0], inverse: FlxG.random.bool()});
+
+            checklistQuestions.push({q: misc[1], inverse: FlxG.random.bool()});
+            checklistQuestions.push({q: misc[2], inverse: FlxG.random.bool()});
+
+            if (reallyEasy)
+                checklistQuestions.push({q: ezmix[0], inverse: !FlxG.random.bool()});
+            else
+                checklistQuestions.push({q: misc[3], inverse: FlxG.random.bool()});
         }
 
         // shuffle for random order
@@ -513,15 +539,29 @@ class PlayState extends FlxState
             trace(finalDecision);
             if (!curFish.data.evil && !curFish.data.bomb)
             {
+                trace("testing");
                 var passesRequirements:Bool = true;
                 for (que in checklistQuestions)
                 {
-                    if (!(que.inverse ? !que.q.func(curFish.data) : que.q.func(curFish.data)))
+                    trace(que.q.title);
+                    trace(que.q.titleOpposite);
+                    trace(que.inverse);
+                    
+                    var testResult = que.q.func(curFish.data);
+                    if (que.inverse)
+                        testResult = !testResult;
+
+                    if (!testResult)
+                    {
                         passesRequirements = false;
+                        break;
+                    }
                 }
 
                 var stampAccepted = stampResult();
-                if ((stampAccepted && !passesRequirements) || (!stampAccepted && passesRequirements))
+                if (stampsGood == 0 && stampsBad == 0)
+                    finalDecision = false;
+                else if ((stampAccepted && !passesRequirements) || (!stampAccepted && passesRequirements))
                     finalDecision = false;
             }
         }

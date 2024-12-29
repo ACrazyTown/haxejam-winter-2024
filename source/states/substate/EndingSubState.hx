@@ -75,7 +75,13 @@ class EndingSubState extends FlxSubState
 
     function saveAndExit():Void
     {
-        // TODO: SAVE DATA
+        trace("Survived rounds: " + PlayState.instance.survivedRounds);
+        trace("Total time: " + PlayState.instance.totalTime);
+
+        FlxG.save.data.survivedRounds = PlayState.instance.survivedRounds;
+        FlxG.save.data.survivedTime = PlayState.instance.totalTime;
+        FlxG.save.flush();
+
         FlxG.switchState(MenuState.new);
     }
 }

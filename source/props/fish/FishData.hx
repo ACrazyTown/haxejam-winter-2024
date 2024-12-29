@@ -10,7 +10,7 @@ class FishData
     {
         var kind = FlxG.random.getObject(Constants.FISH_KINDS);
         var location = FlxG.random.getObject(Constants.FISH_LOCATIONS);
-        var age = FlxG.random.int(1, 1000);
+        var age = FlxG.random.int(1, 10000);
         // TODO
         var legal = true;
         if (location == FishLocation.FINDFISH_LAKE && age < 365)
@@ -27,7 +27,9 @@ class FishData
             color.hue = FlxG.random.int(0, 359);
         }
 
-        var data = new FishData(color, kind, location, age, legal, poisonous, evil, bomb);
+        var saltwater = location == FishLocation.SALMON_SEA || location == FishLocation.HAKS_HARBOR || location == FishLocation.FLIKSEL_FJORD;
+
+        var data = new FishData(color, kind, location, age, legal, poisonous, evil, bomb, saltwater);
         return data;
     }
 
@@ -39,9 +41,10 @@ class FishData
     public var poisonous:Bool;
     public var evil:Bool;
     public var bomb:Bool;
+    public var saltwater:Bool;
 
     public function new(color:Null<FlxColor>, kind:FishKind, location:FishLocation, 
-        age:Int, legal:Bool, poisonous:Bool, evil:Bool, bomb:Bool)
+        age:Int, legal:Bool, poisonous:Bool, evil:Bool, bomb:Bool, saltwater:Bool)
     {
         this.color = color;
         this.kind = kind;
@@ -51,6 +54,7 @@ class FishData
         this.poisonous = poisonous;
         this.evil = evil;
         this.bomb = bomb;
+        this.saltwater = saltwater;
     }
 
     public function toString():String

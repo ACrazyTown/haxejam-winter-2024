@@ -100,7 +100,9 @@ class DocumentViewSubstate extends FlxSubState
                 var i = 0;
                 for (que in PlayState.instance.checklistQuestions)
                 {
-                    var txt:FlxText = new FlxText(header.x, (header.y + header.height) + i * 60, que.inverse ? que.q.titleOpposite : que.q.title, 24);
+                    var txt:FlxText = new FlxText(header.x, (header.y + header.height) + i * 60, bg.width - 40, que.inverse ? que.q.titleOpposite : que.q.title, 24);
+                    txt.font = "Overlock Bold";
+                    txt.color = FlxColor.BLACK;
                     checkmarkTxtGroup.add(txt);
 
                     i++;
@@ -124,6 +126,7 @@ class DocumentViewSubstate extends FlxSubState
                 rightBtn.x += 310;
                 add(rightBtn);
 
+                currentBookPage = PlayState.instance.checklistLastPage;
                 changeBookPageSprite();
                 bookView.screenCenter();
                 add(bookView);
@@ -141,6 +144,7 @@ class DocumentViewSubstate extends FlxSubState
         if (currentBookPage < 22)
         {
             currentBookPage += 1;
+            PlayState.instance.checklistLastPage = currentBookPage;
             changeBookPageSprite();
             playSound();
         }
@@ -151,6 +155,7 @@ class DocumentViewSubstate extends FlxSubState
         if (currentBookPage > 1)
         {
             currentBookPage -= 1;
+            PlayState.instance.checklistLastPage = currentBookPage;
             changeBookPageSprite();
             playSound();
         }

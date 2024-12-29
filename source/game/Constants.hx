@@ -27,6 +27,7 @@ class Constants
     inline public static final SCORE_MAX_BONUS:Int = 200;
 
     inline public static final ALL_CORRECT_CHANCE:Float = 50;
+    inline public static final EZ_MODE_CHANCE:Float = 10;
 
     public static final FISH_KINDS:Array<String> = AbstractEnumTools.getValues(FishKind);
     public static final FISH_LOCATIONS:Array<String> = AbstractEnumTools.getValues(FishLocation);
@@ -65,7 +66,59 @@ class Constants
         }
     ];
 
-    public static var QUESTIONS_KIND:Array<ChecklistQuestion> = null;
+    public static var QUESTIONS_KIND:Array<ChecklistQuestion> = 
+    [
+        {
+            title: "Is the fish a Flopper?",
+            titleOpposite: "Is the fish not a Flopper?",
+            func: ChecklistQuestions.isFlopper
+        },
+        {
+            title: "Is the fish normal and boring?",
+            titleOpposite: "Is the fish not normal and boring?",
+            func: ChecklistQuestions.isNormal
+        },
+        {
+            title: "Is the fish a salmon?",
+            titleOpposite: "Is the fish not a salmon?",
+            func: ChecklistQuestions.isSalmon
+        },
+        {
+            title: "Is the fish chill like dat?",
+            titleOpposite: "Is the fish not chill like dat?",
+            func: ChecklistQuestions.isChill
+        },
+        {
+            title: "Is the fish a BIG fish?",
+            titleOpposite: "Is fish not a BIG fish?",
+            func: ChecklistQuestions.isBigKind
+        },
+        {
+            title: "Is the fish a small fish?",
+            titleOpposite: "Is the fish not a small fish?",
+            func: ChecklistQuestions.isSmallKind
+        },
+        {
+            title: "Is the fish a catfish?",
+            titleOpposite: "Is the fish not a catfish?",
+            func: ChecklistQuestions.isCatfish
+        },
+        {
+            title: "Is the fish a dogfish?",
+            titleOpposite: "Is the fish not a dogfish?",
+            func: ChecklistQuestions.isDogfish
+        },
+        {
+            title: "Is the fish a pufferfish?",
+            titleOpposite: "Is the fish not a pufferfish?",
+            func: ChecklistQuestions.isPufferfish
+        },
+        {
+            title: "Is the fish made from cardboard?",
+            titleOpposite: "Is the fish not made from cardboard?",
+            func: ChecklistQuestions.isCardboard
+        }
+    ];
 
     public static var QUESTIONS_LOCATION:Array<ChecklistQuestion> =
     [
@@ -132,6 +185,26 @@ class Constants
             title: "Does the fish meow?",
             titleOpposite: "Does the fish not meow?",
             func: ChecklistQuestions.meows
+        },
+        {
+            title: "Is a saltwater fish?",
+            titleOpposite: "Is it a freshwater fish?",
+            func: ChecklistQuestions.isSaltwater
+        },
+        {
+            title: "Does the fish bark?",
+            titleOpposite: "Does the fish not bark?",
+            func: ChecklistQuestions.barks
+        },
+        {
+            title: "Is the fish edible?",
+            titleOpposite: "Is the fish not edible?",
+            func: ChecklistQuestions.isEdible
+        },
+        {
+            title: "Is the fish over 10 years old? (no leap years)",
+            titleOpposite: "Is the fish not over 10 years old? (no leap years)",
+            func: ChecklistQuestions.isOver10YearsOld
         }
     ];
 }
