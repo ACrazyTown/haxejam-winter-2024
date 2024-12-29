@@ -11,6 +11,7 @@ import flixel.util.FlxColor;
 import flixel.FlxSprite;
 import flixel.FlxSubState;
 import props.Document.DocumentType;
+import props.fish.FishLocation;
 
 class DocumentViewSubstate extends FlxSubState
 {
@@ -79,6 +80,8 @@ class DocumentViewSubstate extends FlxSubState
                 var fd = PlayState.instance.curFish.data;
                 var text = intro[PlayState.instance.checklistIntroText] + "\n\n";
                 text += 'It is a ${fd.kind.formatted()} originating from the ${fd.location}.\n';
+                if (PlayState.instance.curFish.data.location == FishLocation.NUCLEAR_WASTELAND)
+                    text += "Sounds... toxic...";
                 text += 'Estimated to be around ${fd.age} days old.';
 
                 infoText = new FlxText(header.x, header.y + header.height, bg.width - 40, text, 24);
