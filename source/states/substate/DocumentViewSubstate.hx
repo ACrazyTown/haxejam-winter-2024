@@ -35,8 +35,8 @@ class DocumentViewSubstate extends FlxSubState
     {
         PlayState.instance.interactionsAllowed = false;
         parent.visible = false;
-        var sound = FlxG.sound.play("assets/sounds/paper_grab");
-        sound.pitch = MathUtil.eerp(0.9, 1.1);
+
+        playSound();
 
         overlay = new FlxSprite().makeGraphic(1280, 720, FlxColor.BLACK);
         overlay.alpha = 0.5;
@@ -78,12 +78,19 @@ class DocumentViewSubstate extends FlxSubState
         }
     }
 
+    function playSound()
+    {
+        var sound = FlxG.sound.play("assets/sounds/paper_grab");
+        sound.pitch = MathUtil.eerp(0.9, 1.1);
+    }
+
     function bookNext()
     {
         if (currentBookPage < 22)
         {
             currentBookPage += 1;
             changeBookPageSprite();
+            playSound();
         }
     }
 
@@ -93,6 +100,7 @@ class DocumentViewSubstate extends FlxSubState
         {
             currentBookPage -= 1;
             changeBookPageSprite();
+            playSound();
         }
     }
 
