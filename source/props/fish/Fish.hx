@@ -86,7 +86,11 @@ class Fish extends FlxSpriteContainer implements IDraggable
             fishShader.hue = data.evil ? 0 : data.color.hue;
         }
         
-        pickupSound = data.kind == CAT ? "assets/sounds/meow" : "assets/sounds/fish";
+        pickupSound = "assets/sounds/fish";
+        if (data.kind == CAT)
+            pickupSound = "assets/sounds/meow";
+        if (data.kind == DOG)
+            pickupSound = "assets/sounds/bark";
 
         recalcOffset();
     }
