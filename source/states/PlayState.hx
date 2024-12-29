@@ -371,6 +371,7 @@ class PlayState extends FlxState
         if (fishPos != null)
             fishPos.put();
         fishPos = MathUtil.centerToArea(FlxRect.get(0, 0, curFish.width, curFish.height), FlxRect.get(200, 110, 520, 420), XY);
+        curFish.x = fishPos.x;
 
         curFish.visible = true;
         if (curFish.data.evil)

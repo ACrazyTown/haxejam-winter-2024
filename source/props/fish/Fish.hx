@@ -1,5 +1,9 @@
 package props.fish;
 
+import vfx.MaskShader;
+import openfl.geom.Rectangle;
+import flixel.util.FlxSpriteUtil;
+import openfl.display.BitmapData;
 import flixel.FlxG;
 import flixel.util.FlxColor;
 import vfx.FishColorShader;
@@ -16,6 +20,11 @@ class Fish extends FlxSpriteContainer implements IDraggable
     var fish:FlxSprite;
     var fishShader:FishColorShader;
 
+    // stamp
+    var stampBitmap:BitmapData;
+    var mask:BitmapData;
+    var stampSprite:FlxSprite;
+
     public function new(x:Float = 0, y:Float = 0, data:FishData)
     {
         super(x, y);
@@ -27,6 +36,15 @@ class Fish extends FlxSpriteContainer implements IDraggable
         // fish.shader = fishShader;
         fishShader = new FishColorShader();
         fish.shader = fishShader;
+
+        stampSprite = new FlxSprite();
+        // ughhhhhhhhhhh
+        // maybe im just not doing it right but the alpha mask
+        // leaves black pixels behind instead of making them transparent
+        // so we have to resort to erasing them with a shader
+        // fml
+        stampSprite.shader = new MaskShader();
+        add(stampSprite);
 
         loadFromData(data);
     }
@@ -42,9 +60,57 @@ class Fish extends FlxSpriteContainer implements IDraggable
         else
             fish.loadGraphic(path);
         
+        if (data.kind == BIG)
+        {
+            var halfW = width / 2;
+            var halfH = height / 2;
+
+            offset.x = halfW;
+            offset.y = halfH;
+
+            width = halfW;
+            height = halfH;
+        }
+
+        if (stampBitmap != null)
+        {
+            stampBitmap.dispose();
+            stampBitmap = null;
+        }
+
+        stampBitmap = new BitmapData(fish.frameWidth, fish.frameHeight, true, 0);
+        // stampBitmap.fillRect(new Rectangle(0, 0, stampBitmap.width, stampBitmap.height), 0);
+        // stampBitmap.fillRect(new Rectangle(0, 0, FlxG.width, FlxG.height), 0);
+        createMask();
+        applyMask();
+
         // Always force hue 0 (red) on evil fish
         fishShader.hue = data.evil ? 0 : data.color.hue;
         
         pickupSound = data.kind == CAT ? "assets/sounds/meow" : null;
+    }
+
+    function createMask():Void
+    {
+        if (mask != null)
+        {
+            mask.dispose();
+            mask = null;
+        }
+
+        mask = fish.pixels.clone();
+        for (x in 0...mask.width)
+        {
+            for (y in 0...mask.height)
+            {
+                if (mask.getPixel32(x, y) != 0)
+                    mask.setPixel32(x, y, FlxColor.RED);
+            }
+        }
+    }
+
+    public function applyMask():Void
+    {
+        FlxSpriteUtil.alphaMask(stampSprite, stampBitmap, mask);
     }
 }

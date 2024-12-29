@@ -50,7 +50,9 @@ class Startup extends FlxState
 
         Mouse.setState(NORMAL);
 
+        #if debug
         DebugKeybindsPlugin.init();
+        #end
     }
 
     function done():Void
