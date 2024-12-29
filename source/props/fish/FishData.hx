@@ -13,6 +13,7 @@ class FishData
         color.hue = FlxG.random.int(0, 359);
 
         var kind = FlxG.random.getObject(Constants.FISH_KINDS);
+        kind = FishKind.BIG;
         var location = FlxG.random.getObject(Constants.FISH_LOCATIONS);
         var age = FlxG.random.int(1, 1000);
         // TODO

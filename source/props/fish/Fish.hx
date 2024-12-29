@@ -59,18 +59,6 @@ class Fish extends FlxSpriteContainer implements IDraggable
             fish.loadGraphic("assets/images/fish/tempfish.png");
         else
             fish.loadGraphic(path);
-        
-        if (data.kind == BIG)
-        {
-            var halfW = width / 2;
-            var halfH = height / 2;
-
-            offset.x = halfW;
-            offset.y = halfH;
-
-            width = halfW;
-            height = halfH;
-        }
 
         if (stampBitmap != null)
         {
@@ -86,8 +74,9 @@ class Fish extends FlxSpriteContainer implements IDraggable
 
         // Always force hue 0 (red) on evil fish
         fishShader.hue = data.evil ? 0 : data.color.hue;
-        
         pickupSound = data.kind == CAT ? "assets/sounds/meow" : null;
+
+        recalcOffset();
     }
 
     function createMask():Void
@@ -112,5 +101,33 @@ class Fish extends FlxSpriteContainer implements IDraggable
     public function applyMask():Void
     {
         FlxSpriteUtil.alphaMask(stampSprite, stampBitmap, mask);
+        recalcOffset();
+    }
+
+    function recalcOffset():Void
+    {
+        // big fish why are you so big and fat
+        if (data.kind == BIG)
+        {
+            var halfW = fish.frameWidth / 2;
+            var quartW = halfW / 2;
+            var halfH = fish.frameHeight / 2;
+            var quartH = halfH / 2;
+
+            // fish.offset.x = -halfW;
+            // fish.offset.y = -halfH;
+
+            fish.width = halfW;
+            fish.height = halfH;
+            fish.offset.set(quartW, quartH);
+            stampSprite.width = halfW;
+            stampSprite.height = halfH;
+            stampSprite.offset.set(quartW, quartH);
+        }
+        else
+        {
+            offset.set(0, 0);
+            stampSprite.offset.set(0, 0);
+        }
     }
 }

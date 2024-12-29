@@ -43,8 +43,8 @@ class Stamp extends FlxSprite implements IDraggable
 
             var mat:Matrix = new Matrix();
             mat.identity();
-            mat.tx = this.x - PlayState.instance.curFish.x;
-            mat.ty = this.y - PlayState.instance.curFish.y;
+            mat.tx = this.x - PlayState.instance.curFish.x - PlayState.instance.curFish.offset.x;
+            mat.ty = this.y - PlayState.instance.curFish.y - PlayState.instance.curFish.offset.y;
 
             var bitmap:BitmapData = FlxGraphic.fromAssetKey(stampGraphic).bitmap;
 

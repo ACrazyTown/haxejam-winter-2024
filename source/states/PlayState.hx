@@ -330,7 +330,7 @@ class PlayState extends FlxState
         curFish.dragAllowed = false;
         curFish.loadFromData(FishData.random());
         trace(curFish.data);
-        curFish.y = -curFish.height;
+        curFish.y = -curFish.height * 2;
 
         // generate checklist
         var colors = Constants.QUESTIONS_COLOR.copy();
@@ -442,7 +442,7 @@ class PlayState extends FlxState
         var speed:Float = distance / 2;
         var duration:Float = distance / speed;
         trace(duration);
-        FlxTween.tween(curFish, {y: -curFish.height}, duration, {onComplete: (_) ->
+        FlxTween.tween(curFish, {y: -curFish.height * 2}, duration, {onComplete: (_) ->
         {
             conveyorSound.fadeOut(0.5, 0, (_) ->
             {
