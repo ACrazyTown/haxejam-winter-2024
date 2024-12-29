@@ -41,6 +41,9 @@ class TutorialSubstate extends FlxSubState
 
         if (canSwitchPopup && FlxG.mouse.justPressed)
             switchTPopup();
+
+        if (canSwitchPopup && FlxG.keys.justPressed.ESCAPE)
+            skipTutorial();
     }
 
     function getCurrPopupPath()
@@ -78,29 +81,13 @@ class TutorialSubstate extends FlxSubState
         {
             inProgress = false;
 
-            FlxTween.tween(popups.scale, {x: 0, y: 0}, 1, 
-                {
-                    ease: FlxEase.cubeIn,
-                    onComplete: (_) -> {
-                        FlxTween.color(dimOverlay, 1, FlxColor.fromRGB(0, 0, 0, 100), FlxColor.TRANSPARENT, {
-                            ease: FlxEase.cubeOut, 
-                            onComplete: onTutorialEnd
-                        });
-                        FlxTween.tween(pressPrompt, {x: -541}, 1, {ease: FlxEase.cubeOut});
-                    }
-                }
-            );
+            FlxTween.tween(popups.scale, {x: 0, y: 0}, 1, {ease: FlxEase.cubeIn});
+            FlxTween.tween(pressPrompt, {x: -628}, 1, {ease: FlxEase.cubeOut, onComplete: onTutorialEnd});
         }
         else
         {
             if (currPopup == 1)
-            {
                 FlxTween.color(dimOverlay, 1, FlxColor.fromRGB(0, 0, 0, 100), FlxColor.TRANSPARENT, {ease: FlxEase.cubeOut});
-            }
-            else if (currPopup == popupAmt - 1)
-            {
-                FlxTween.color(dimOverlay, 1, FlxColor.TRANSPARENT, FlxColor.fromRGB(0, 0, 0, 100), {ease: FlxEase.cubeOut});
-            }
 
             currPopup++;
             popups.scale.set(0, 0);
@@ -108,6 +95,16 @@ class TutorialSubstate extends FlxSubState
     
             animatePopup();
         }
+    }
+
+    function skipTutorial()
+    {
+        if (currPopup == 1)
+            FlxTween.color(dimOverlay, 1, FlxColor.fromRGB(0, 0, 0, 100), FlxColor.TRANSPARENT, {ease: FlxEase.cubeOut});
+
+        // :catsmirk:
+        currPopup = popupAmt;
+        switchTPopup();
     }
 
     function animatePopup()

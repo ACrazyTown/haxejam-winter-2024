@@ -18,6 +18,8 @@ class DocumentViewSubstate extends FlxSubState
     var bg:FlxSprite;
     var type:DocumentType;
 
+    var bookView:FlxSprite;
+    var currentBookPage:Int = 1;
     var header:FlxSprite;
     var infoText:FlxText;
 
@@ -49,8 +51,8 @@ class DocumentViewSubstate extends FlxSubState
     {
         PlayState.instance.interactionsAllowed = false;
         parent.visible = false;
-        var sound = FlxG.sound.play("assets/sounds/paper_grab");
-        sound.pitch = MathUtil.eerp(0.9, 1.1);
+
+        playSound();
 
         overlay = new FlxSprite().makeGraphic(1280, 720, FlxColor.BLACK);
         overlay.alpha = 0.5;
@@ -58,6 +60,8 @@ class DocumentViewSubstate extends FlxSubState
 
         bg = new FlxSprite();
         add(bg);
+
+        bookView = new FlxSprite(500, 700);
 
         switch (type)
         {
@@ -107,19 +111,54 @@ class DocumentViewSubstate extends FlxSubState
                 bg.screenCenter();
 
                 leftBtn = new FancyButton(0, 0, "assets/images/ui/arrow_left.png", () -> {
-                    trace("hi");
+                    bookPrev();
                 });
                 leftBtn.screenCenter();
                 leftBtn.x -= 310;
                 add(leftBtn);
         
                 rightBtn = new FancyButton(0, 0, "assets/images/ui/arrow_right.png", () -> {
-                    trace("hi");
+                    bookNext();
                 });
                 rightBtn.screenCenter();
                 rightBtn.x += 310;
                 add(rightBtn);
+
+                changeBookPageSprite();
+                bookView.screenCenter();
+                add(bookView);
         }
+    }
+
+    function playSound()
+    {
+        var sound = FlxG.sound.play("assets/sounds/paper_grab");
+        sound.pitch = MathUtil.eerp(0.9, 1.1);
+    }
+
+    function bookNext()
+    {
+        if (currentBookPage < 22)
+        {
+            currentBookPage += 1;
+            changeBookPageSprite();
+            playSound();
+        }
+    }
+
+    function bookPrev()
+    {
+        if (currentBookPage > 1)
+        {
+            currentBookPage -= 1;
+            changeBookPageSprite();
+            playSound();
+        }
+    }
+
+    function changeBookPageSprite()
+    {
+        bookView.loadGraphic("assets/images/ui/book/book_" + currentBookPage + ".png");
     }
 
     // ewwwwwwwww
