@@ -18,5 +18,9 @@ Explosion and Rubble/Debris by deleted_user_1887925 -- https://freesound.org/s/1
 
 Sparkler.aif by Ned Bouhalassa -- https://freesound.org/s/8320/ -- License: Creative Commons 0
 
+cat meow short by skymary -- https://freesound.org/s/412017/ -- License: Creative Commons 0
+
+fish slap ground or snow writhing wet.wav by kyles -- https://freesound.org/s/450830/ -- License: Creative Commons 0
+
 # Fonts
 Overlock -- https://fonts.google.com/specimen/Overlock -- Copyright (c) 2011, Dario Manuel Muhafara -- SIL Open Font License
