@@ -55,6 +55,11 @@ class Startup extends FlxState
         #end
 
         FlxG.save.bind("ServeCatFishDish", "acrazytown");
+        if (FlxG.save.data.survivedRounds == null)
+            FlxG.save.data.survivedRounds = 0;
+        if (FlxG.save.data.survivedTime == null)
+            FlxG.save.data.survivedTime = 0;
+        FlxG.save.flush();
     }
 
     function done():Void

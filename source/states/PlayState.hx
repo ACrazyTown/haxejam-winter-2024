@@ -569,14 +569,15 @@ class PlayState extends FlxState
             }
         }
 
-        trace(finalDecision);
-
         FlxTimer.wait(1, () -> 
         {
             if (finalDecision)
                 phone.doHappy();
             else
+            {
                 phone.doMad();
+                penalty();
+            }
         });
     }
 

@@ -33,10 +33,48 @@ class EndingSubState extends FlxSubState
         switch (ending)
         {
             case TOO_MANY_PENALTIES:
-                // TODO:
+                bg = new FlxSprite().makeGraphic(1280, 720, FlxColor.BLACK);
+                add(bg);
+
+                FlxTimer.wait(3, () ->
+                {
+                    FlxG.sound.play("assets/sounds/bell");
+                    var text = new FlxSprite(0, 0).loadGraphic("assets/images/ending/firedend.png");
+                    text.screenCenter();
+                    add(text);
+
+                    FlxTimer.wait(5, () ->
+                    {
+                        FlxTween.tween(text, {alpha: 0}, 2, {
+                            onComplete: (_) -> 
+                            {
+                                FlxTimer.wait(1, saveAndExit);
+                            }
+                        });
+                    });
+                });
 
             case POISONED:
-                // TODO:
+                bg = new FlxSprite().makeGraphic(1280, 720, FlxColor.BLACK);
+                add(bg);
+
+                FlxTimer.wait(3, () ->
+                {
+                    FlxG.sound.play("assets/sounds/bell");
+                    var text = new FlxSprite(0, 0).loadGraphic("assets/images/ending/poisonend.png");
+                    text.screenCenter();
+                    add(text);
+
+                    FlxTimer.wait(5, () ->
+                    {
+                        FlxTween.tween(text, {alpha: 0}, 2, {
+                            onComplete: (_) -> 
+                            {
+                                FlxTimer.wait(1, saveAndExit);
+                            }
+                        });
+                    });
+                });
 
             case EVIL:
                 bg = new FlxSprite().makeGraphic(1280, 720, FlxColor.BLACK);
@@ -45,7 +83,7 @@ class EndingSubState extends FlxSubState
                 FlxTimer.wait(3, () ->
                 {
                     FlxG.sound.play("assets/sounds/bell");
-                    var text = new FlxSprite(0, 0).loadGraphic("assets/images/ending/evil.png");
+                    var text = new FlxSprite(0, 0).loadGraphic("assets/images/ending/evilfishend.png");
                     text.screenCenter();
                     add(text);
 
@@ -61,11 +99,12 @@ class EndingSubState extends FlxSubState
                 });
                 
             case EXPLODE:
-                bg = new FlxSprite().makeGraphic(1280, 720, FlxColor.BLACK);
-                add(bg);
-
                 FlxG.sound.play("assets/sounds/explode", 0.7);
                 FlxG.camera.flash(FlxColor.WHITE, 4);
+
+                var img = new FlxSprite().loadGraphic("assets/images/ending/explodedend.png");
+                add(img);
+
                 FlxTimer.wait(8, () ->
                 {
                     saveAndExit();

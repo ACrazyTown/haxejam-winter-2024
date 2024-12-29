@@ -87,10 +87,13 @@ class Fish extends FlxSpriteContainer implements IDraggable
         }
         
         pickupSound = "assets/sounds/fish";
-        if (data.kind == CAT)
-            pickupSound = "assets/sounds/meow";
-        if (data.kind == DOG)
-            pickupSound = "assets/sounds/bark";
+        if (!data.evil && !data.bomb)
+        {
+            if (data.kind == CAT)
+                pickupSound = "assets/sounds/meow";
+            if (data.kind == DOG)
+                pickupSound = "assets/sounds/bark";
+        }
 
         recalcOffset();
     }
