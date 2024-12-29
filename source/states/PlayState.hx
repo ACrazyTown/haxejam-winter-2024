@@ -326,6 +326,7 @@ class PlayState extends FlxState
 
     function startInspection():Void
     {
+        FlxG.sound.music.pitch = 1;
         interactionsAllowed = false;
         fishTakenCareOf = false;
         stampsGood = 0;

@@ -105,10 +105,11 @@ class EndingSubState extends FlxSubState
                 var img = new FlxSprite().loadGraphic("assets/images/ending/explodedend.png");
                 add(img);
 
-                FlxTimer.wait(8, () ->
+                FlxTimer.wait(7, () ->
                 {
-                    saveAndExit();
+                    FlxG.camera.fade(FlxColor.BLACK, 1, false, saveAndExit);
                 });
+
         }
     }
 

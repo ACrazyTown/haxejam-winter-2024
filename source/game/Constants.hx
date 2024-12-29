@@ -173,7 +173,7 @@ class Constants
         },
         {
             title: "Was the fish legally caught?",
-            titleOpposite: "Was the fish ilegally caught?",
+            titleOpposite: "Was the fish illegally caught?",
             func: ChecklistQuestions.wasLegallyCaught
         },
         {
