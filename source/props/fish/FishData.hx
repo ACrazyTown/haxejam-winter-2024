@@ -1,5 +1,6 @@
 package props.fish;
 
+import game.ChecklistQuestions;
 import game.Constants;
 import flixel.FlxG;
 import flixel.util.FlxColor;
@@ -27,10 +28,25 @@ class FishData
             color.hue = FlxG.random.int(0, 359);
         }
 
+        if (location == FishLocation.CATFISH_CANAL)
+        {
+            if (isMagentaPink(color))
+                legal = false;
+        }
+        if (location == FishLocation.FLIKSEL_FJORD)
+        {
+            legal = false;
+        }
+
         var saltwater = location == FishLocation.SALMON_SEA || location == FishLocation.HAKS_HARBOR || location == FishLocation.FLIKSEL_FJORD;
 
         var data = new FishData(color, kind, location, age, legal, poisonous, evil, bomb, saltwater);
         return data;
+    }
+
+    static function isMagentaPink(color:FlxColor):Bool
+    {
+        return color.hue > 281 && color.hue < 330;
     }
 
     public var color:Null<FlxColor>;

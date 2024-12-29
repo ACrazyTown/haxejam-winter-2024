@@ -182,4 +182,9 @@ class ChecklistQuestions
     {
         return data.age > 3650;
     }
+
+    public static function isLessThanAMonthOld(data:FishData):Bool
+    {
+        return data.age < 32;
+    }
 }

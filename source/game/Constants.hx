@@ -205,6 +205,11 @@ class Constants
             title: "Is the fish over 10 years old? (no leap years)",
             titleOpposite: "Is the fish not over 10 years old? (no leap years)",
             func: ChecklistQuestions.isOver10YearsOld
+        },
+        {
+            title: "Is the fish less than a month old?",
+            titleOpposite: "Is the fish more than a month old?",
+            func: ChecklistQuestions.isLessThanAMonthOld
         }
     ];
 }
