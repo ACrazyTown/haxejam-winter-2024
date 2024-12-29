@@ -133,6 +133,8 @@ class PlayState extends FlxState
         FlxG.random.resetInitialSeed();
         trace("RNG seed: " + FlxG.random.initialSeed);
 
+        FlxG.sound.playMusic("assets/music/main", 0.5);
+
         // TODO: Check if tutorial not seen
         var needsTutorial:Bool = #if PLAY false #else true #end;
 
@@ -341,13 +343,13 @@ class PlayState extends FlxState
         if (allCorrect)
         {
             checklistQuestions.push({q: colors[0], inverse: !colors[1].func(curFish.data)});
-            checklistQuestions.push({q: colors[1], inverse: !colors[1].func(curFish.data)});
-            checklistQuestions.push({q: colors[1], inverse: !colors[1].func(curFish.data)});
         }
         else
         {
             
         }
+
+        trace(checklistQuestions);
 
         if (curFish.data.evil || curFish.data.bomb)
             maxTime = Constants.TIME_MAX_DANGER;

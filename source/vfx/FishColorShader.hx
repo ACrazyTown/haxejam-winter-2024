@@ -50,7 +50,6 @@ class FishColorShader extends FlxShader
 
     @:noCompletion function set_hue(value:Float):Float
     {
-        trace(value);
         this._hue.value = [value / 359];
         return hue = value;
     }

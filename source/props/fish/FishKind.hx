@@ -2,15 +2,15 @@ package props.fish;
 
 enum abstract FishKind(String) from String to String
 {
-    var FLOPPER = "Flopper";
-    var NORMAL = "Normal boring regular fish";
-    var SALMON = "Salmon";
-    var CHILL = "Chill fish";
-    var DAPPER = "Dapper fish";
-    var BIG = "BIG fish";
-    var SMALL = "small fish";
-    var CAT = "Catfish";
-    var DOG = "Dogfish";
-    var PUFFER = "Pufferfish";
-    var CARDBOARD = "Cardboard fish";
+    var FLOPPER = "flopper";
+    var NORMAL = "normal";
+    var SALMON = "salmon";
+    var CHILL = "chill";
+    var DAPPER = "dapper";
+    var BIG = "big";
+    var SMALL = "small";
+    var CAT = "catfish";
+    var DOG = "dogfish";
+    var PUFFER = "pufferfish";
+    var CARDBOARD = "cardboard";
 }

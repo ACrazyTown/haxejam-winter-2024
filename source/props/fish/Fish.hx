@@ -35,7 +35,13 @@ class Fish extends FlxSpriteContainer implements IDraggable
     {
         this.data = data;
 
-        fish.loadGraphic("assets/images/fish/tempfish.png");
+        // fish.loadGraphic("assets/images/fish/tempfish.png");
+        var path = 'assets/images/fish/${data.kind}.png';
+        if (!FlxG.assets.exists(path))
+            fish.loadGraphic("assets/images/fish/tempfish.png");
+        else
+            fish.loadGraphic(path);
+        
         // Always force hue 0 (red) on evil fish
         fishShader.hue = data.evil ? 0 : data.color.hue;
         

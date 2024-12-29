@@ -50,9 +50,6 @@ class MenuState extends FlxState
 
         FlxTween.tween(fg, {x: 0}, 1, {ease: FlxEase.cubeOut});
         FlxTween.tween(playButtonNew, {x: 650}, 1, {ease: FlxEase.cubeOut});
-    
-        if (FlxG.sound.music == null)
-            FlxG.sound.playMusic("assets/music/main", 0.5);
     }
 
     function swipeStateSwitcher(nextState:NextState)
