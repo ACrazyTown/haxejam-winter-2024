@@ -105,4 +105,18 @@ class Constants
             func: ChecklistQuestions.isFromFlikselFjord
         }
     ];
+
+    public static var QUESTIONS_DECORATION:Array<ChecklistQuestion> =
+    [
+        {
+            title: "Does the fish have a decoration?",
+            titleOpposite: "Does the fish not have a decoration?",
+            func: ChecklistQuestions.hasDecoration
+        },
+        {
+            title: "Does the fish have a hat?",
+            titleOpposite: "Does the fish not have a hat?",
+            func: ChecklistQuestions.hasHat
+        }
+    ];
 }
