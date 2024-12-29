@@ -16,6 +16,9 @@ class DocumentViewSubstate extends FlxSubState
     var bg:FlxSprite;
     var type:DocumentType;
 
+    var bookView:FlxSprite;
+    var currentBookPage:Int = 1;
+
     var leftBtn:FancyButton;
     var rightBtn:FancyButton;
 
@@ -42,6 +45,8 @@ class DocumentViewSubstate extends FlxSubState
         bg = new FlxSprite();
         add(bg);
 
+        bookView = new FlxSprite(500, 700);
+
         switch (type)
         {
             case PAPER, CHECKLIST:
@@ -54,19 +59,46 @@ class DocumentViewSubstate extends FlxSubState
                 bg.screenCenter();
 
                 leftBtn = new FancyButton(0, 0, "assets/images/ui/arrow_left.png", () -> {
-                    trace("hi");
+                    bookPrev();
                 });
                 leftBtn.screenCenter();
                 leftBtn.x -= 310;
                 add(leftBtn);
         
                 rightBtn = new FancyButton(0, 0, "assets/images/ui/arrow_right.png", () -> {
-                    trace("hi");
+                    bookNext();
                 });
                 rightBtn.screenCenter();
                 rightBtn.x += 310;
                 add(rightBtn);
+
+                changeBookPageSprite();
+                bookView.screenCenter();
+                add(bookView);
         }
+    }
+
+    function bookNext()
+    {
+        if (currentBookPage < 22)
+        {
+            currentBookPage += 1;
+            changeBookPageSprite();
+        }
+    }
+
+    function bookPrev()
+    {
+        if (currentBookPage > 1)
+        {
+            currentBookPage -= 1;
+            changeBookPageSprite();
+        }
+    }
+
+    function changeBookPageSprite()
+    {
+        bookView.loadGraphic("assets/images/ui/book/book_" + currentBookPage + ".png");
     }
 
     // ewwwwwwwww
