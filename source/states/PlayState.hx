@@ -528,6 +528,7 @@ class PlayState extends FlxState
             }
         }
 
+        FlxG.sound.music.pitch = 1;
         var finalDecision:Bool = true;
         if (trashed)
         {
@@ -564,12 +565,24 @@ class PlayState extends FlxState
 
                 var stampAccepted = stampResult();
                 if (stampsGood == 0 && stampsBad == 0)
+                {
                     finalDecision = false;
+
+                    if (curFish.data.poisonous)
+                    {
+                        openSubState(new EndingSubState(POISONED));
+                        return;
+                    }
+                }
                 else if ((stampAccepted && !passesRequirements) || (!stampAccepted && passesRequirements))
                     finalDecision = false;
 
                 if (curFish.data.poisonous && stampAccepted)
+                {
                     finalDecision = false;
+                    openSubState(new EndingSubState(POISONED));
+                    return;
+                }
             }
         }
 

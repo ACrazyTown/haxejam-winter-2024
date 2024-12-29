@@ -1,7 +1,7 @@
 # Authors
 [A Crazy Town](https://twitter.com/acrazytown) - Main programmer
 
-despawnedd - Additional programming, UI, Music
+[despawnedd](https://github.com/despawnedd) - Additional programming, UI, Music
 
 [minihifi9898](https://twitter.com/minihifi9898) - Artist
 
