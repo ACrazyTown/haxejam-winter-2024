@@ -1,5 +1,8 @@
 package props;
 
+import flixel.graphics.FlxGraphic;
+import openfl.display.BitmapData;
+import openfl.geom.Matrix;
 import util.MathUtil;
 import states.PlayState;
 import flixel.FlxG;
@@ -15,12 +18,14 @@ class Stamp extends FlxSprite implements IDraggable
     public var initialY:Float;
 
     var stampGraphic:String;
+    var accept:Bool;
 
     public function new(x:Float = 0, y:Float = 0, accept:Bool)
     {
         super(x, y);
         initialX = x;
         initialY = y;
+        this.accept = accept;
 
         loadGraphic('assets/images/stamp/stamp-${accept ? 'accept' : 'deny'}.png');
         stampGraphic = 'assets/images/stamp/stamp-${accept ? "good" : "bad"}.png';
@@ -35,8 +40,24 @@ class Stamp extends FlxSprite implements IDraggable
             var sound = FlxG.sound.play("assets/sounds/stamp");
             sound.pitch = MathUtil.eerp(0.95, 1.05);
 
-            var stamp:FlxSprite = new FlxSprite(this.x, this.y, stampGraphic);
-            PlayState.instance.stamps.add(stamp);
+            // var stamp:FlxSprite = new FlxSprite(this.x, this.y, stampGraphic);
+            // PlayState.instance.stamps.add(stamp);
+
+            var mat:Matrix = new Matrix();
+            mat.identity();
+            mat.tx = this.x - PlayState.instance.curFish.x - PlayState.instance.curFish.offset.x;
+            mat.ty = this.y - PlayState.instance.curFish.y - PlayState.instance.curFish.offset.y;
+
+            var bitmap:BitmapData = FlxGraphic.fromAssetKey(stampGraphic).bitmap;
+
+            @:privateAccess
+            PlayState.instance.curFish.stampBitmap.draw(bitmap, mat);
+            PlayState.instance.curFish.applyMask();
+
+            if (accept)
+                PlayState.instance.stampsGood++;
+            else
+                PlayState.instance.stampsBad++;
         }
     }
 }

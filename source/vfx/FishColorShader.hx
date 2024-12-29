@@ -6,11 +6,13 @@ import flixel.system.FlxAssets.FlxShader;
 class FishColorShader extends FlxShader
 {
     public var hue(default, set):Float;
+    public var enabled(default, set):Bool;
 
     @:glFragmentSource("
     #pragma header
 
     uniform float _hue;
+    uniform bool _enabled;
 
     // All components are in the range [0…1], including hue.
     vec3 rgb2hsv(vec3 c)
@@ -34,11 +36,22 @@ class FishColorShader extends FlxShader
 
     void main()
     {
+        vec4 final;
         vec4 color = flixel_texture2D(bitmap, openfl_TextureCoordv);
-        vec3 colorHSV = rgb2hsv(color.rgb);
-        colorHSV.r = _hue;
+        
+        if (_enabled)
+        {
+            vec3 colorHSV = rgb2hsv(color.rgb);
+            colorHSV.r = _hue;
 
-        gl_FragColor = vec4(hsv2rgb(colorHSV), color.a);
+            final = vec4(hsv2rgb(colorHSV), color.a);
+        }
+        else
+        {
+            final = color;
+        }
+
+        gl_FragColor = final;
     }
     ")
 
@@ -46,12 +59,18 @@ class FishColorShader extends FlxShader
     {
         super();
         hue = 0;
+        enabled = true;
     }
 
     @:noCompletion function set_hue(value:Float):Float
     {
-        trace(value);
         this._hue.value = [value / 359];
         return hue = value;
+    }
+
+    @:noCompletion function set_enabled(value:Bool):Bool
+    {
+        this._enabled.value = [value];
+        return enabled = value;
     }
 }

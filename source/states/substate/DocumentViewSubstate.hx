@@ -1,5 +1,7 @@
 package states.substate;
 
+import flixel.group.FlxGroup.FlxTypedGroup;
+import flixel.text.FlxText;
 import flixel.tweens.FlxTween;
 import ui.FancyButton;
 import util.MathUtil;
@@ -18,11 +20,25 @@ class DocumentViewSubstate extends FlxSubState
 
     var bookView:FlxSprite;
     var currentBookPage:Int = 1;
+    var header:FlxSprite;
+    var infoText:FlxText;
 
     var leftBtn:FancyButton;
     var rightBtn:FancyButton;
 
     var parent:Document;
+
+    final intro:Array<String> = [
+        "Quite a specimen.",
+        "Who lives under a pineapple under the sea? Not this fish.",
+        "Looks fishy.",
+        "My job is to write these info papers. Sorry this text is irrelevant just wanted to say that.",
+        "I don't like this one.",
+        "I like this one.",
+        "Once upon a time there was a fish. This is its info:"
+    ];
+
+    var checkmarkTxtGroup:FlxTypedGroup<FlxText>;
 
     public function new(type:DocumentType, parent:Document)
     {
@@ -49,10 +65,46 @@ class DocumentViewSubstate extends FlxSubState
 
         switch (type)
         {
-            case PAPER, CHECKLIST:
+            case PAPER:
                 // TODO: Replace with asset
                 bg.makeGraphic(500, 700);
                 bg.screenCenter();
+
+                header = new FlxSprite(bg.x + 20, bg.y + 20).loadGraphic("assets/images/ui/fish_info.png");
+                add(header);
+
+                if (PlayState.instance.checklistIntroText == null)
+                    PlayState.instance.checklistIntroText = FlxG.random.int(0, intro.length - 1);
+
+                var fd = PlayState.instance.curFish.data;
+                var text = intro[PlayState.instance.checklistIntroText] + "\n\n";
+                text += 'It is a ${fd.kind.formatted()} originating from the ${fd.location}.\n';
+                text += 'Estimated to be around ${fd.age} days old.';
+
+                infoText = new FlxText(header.x, header.y + header.height, bg.width - 40, text, 24);
+                infoText.font = "Overlock Bold";
+                infoText.color = FlxColor.BLACK;
+                add(infoText);
+
+            case CHECKLIST:
+                // TODO: Replace with asset
+                bg.makeGraphic(500, 700);
+                bg.screenCenter();
+
+                header = new FlxSprite(bg.x + 20, bg.y + 20).loadGraphic("assets/images/ui/check_list.png");
+                add(header);
+
+                checkmarkTxtGroup = new FlxTypedGroup<FlxText>();
+                add(checkmarkTxtGroup);
+
+                var i = 0;
+                for (que in PlayState.instance.checklistQuestions)
+                {
+                    var txt:FlxText = new FlxText(header.x, (header.y + header.height) + i * 60, que.inverse ? que.q.titleOpposite : que.q.title, 24);
+                    checkmarkTxtGroup.add(txt);
+
+                    i++;
+                }
 
             case BOOK:
                 bg.makeGraphic(500, 700);

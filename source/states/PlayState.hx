@@ -58,7 +58,10 @@ class PlayState extends FlxState
     var curTime:Float;
     var penaltiesReceived:Int;
     var score:Float;
+    public var stampsGood:Int = 0;
+    public var stampsBad:Int = 0;
     public var checklistQuestions:Array<ActualQuestionUsedInGame> = [];
+    public var checklistIntroText:Null<Int> = null;
 
     var draggableObjects:Array<IDraggable>;
     public var curHolding:IDraggable;
@@ -86,7 +89,7 @@ class PlayState extends FlxState
         book = new Document(796, 424, BOOK);
         add(book);
 
-        phone = new Phone(10, 450);
+        phone = new Phone(10, 450, onPhoneSequenceComplete);
         add(phone);
 
         var stampUnderside:FlxSprite = new FlxSprite(240, 585).loadGraphic("assets/images/stamp/underside.png");
@@ -109,12 +112,12 @@ class PlayState extends FlxState
         plateArea.alpha = 0;
         add(plateArea);
 
-        conveyorArea = new FlxSprite(0, 0).makeGraphic(180, 500, FlxColor.WHITE);
+        conveyorArea = new FlxSprite(0, 0).makeGraphic(160, 500, FlxColor.WHITE);
         conveyorArea.x = FlxG.width - conveyorArea.width;
         conveyorArea.alpha = 0;
         add(conveyorArea);
 
-        trashArea = new FlxSprite(conveyorArea.x, conveyorArea.height).makeGraphic(180, 220);
+        trashArea = new FlxSprite(conveyorArea.x, conveyorArea.height).makeGraphic(160, 220);
         trashArea.alpha = 0;
         add(trashArea);
 
@@ -132,6 +135,8 @@ class PlayState extends FlxState
 
         FlxG.random.resetInitialSeed();
         trace("RNG seed: " + FlxG.random.initialSeed);
+
+        FlxG.sound.playMusic("assets/music/main", 0.5);
 
         // TODO: Check if tutorial not seen
         var needsTutorial:Bool = #if PLAY false #else true #end;
@@ -278,7 +283,7 @@ class PlayState extends FlxState
                     // TODO: Check trash & plate
                     if (!FlxG.mouse.overlaps(conveyorArea) && !FlxG.mouse.overlaps(trashArea) && !FlxG.mouse.overlaps(plateArea))
                     {
-                        // TODO: sound
+                        FlxG.sound.play("assets/sounds/disallowed");
                         return;
                     }
                     else
@@ -320,34 +325,49 @@ class PlayState extends FlxState
     {
         interactionsAllowed = false;
         fishTakenCareOf = false;
+        stampsGood = 0;
+        stampsBad = 0;
         maxTime = FlxG.random.float(Constants.TIME_MIN, Constants.TIME_MAX);
         curTime = 0;
+        clock.amount = 1;
 
         trace(maxTime);
 
         curFish.dragAllowed = false;
         curFish.loadFromData(FishData.random());
         trace(curFish.data);
-        curFish.y = -curFish.height;
+        curFish.y = -curFish.height * 2;
+
+        checklistQuestions.splice(0, checklistQuestions.length);
 
         // generate checklist
         var colors = Constants.QUESTIONS_COLOR.copy();
         var locations = Constants.QUESTIONS_LOCATION.copy();
+        var misc = Constants.QUESTIONS_MISC.copy();
 
         FlxG.random.shuffle(colors);
         FlxG.random.shuffle(locations);
+        FlxG.random.shuffle(misc);
 
         var allCorrect = FlxG.random.bool(Constants.ALL_CORRECT_CHANCE);
         if (allCorrect)
         {
-            checklistQuestions.push({q: colors[0], inverse: !colors[1].func(curFish.data)});
-            checklistQuestions.push({q: colors[1], inverse: !colors[1].func(curFish.data)});
-            checklistQuestions.push({q: colors[1], inverse: !colors[1].func(curFish.data)});
+            // only add color questions if there's a color modifier
+            if (curFish.data.color != null)
+                checklistQuestions.push({q: colors[0], inverse: !colors[1].func(curFish.data)});
+
+            checklistQuestions.push({q: misc[0], inverse: !misc[0].func(curFish.data)});
+            checklistQuestions.push({q: misc[1], inverse: !misc[1].func(curFish.data)});
+            checklistQuestions.push({q: misc[2], inverse: !misc[2].func(curFish.data)});
         }
         else
         {
             
         }
+
+        // shuffle for random order
+        FlxG.random.shuffle(checklistQuestions);
+        trace(checklistQuestions);
 
         if (curFish.data.evil || curFish.data.bomb)
             maxTime = Constants.TIME_MAX_DANGER;
@@ -369,6 +389,7 @@ class PlayState extends FlxState
         if (fishPos != null)
             fishPos.put();
         fishPos = MathUtil.centerToArea(FlxRect.get(0, 0, curFish.width, curFish.height), FlxRect.get(200, 110, 520, 420), XY);
+        curFish.x = fishPos.x;
 
         curFish.visible = true;
         if (curFish.data.evil)
@@ -423,8 +444,7 @@ class PlayState extends FlxState
     function gameover():Void
     {
         inspecting = false;
-
-        trace("bruh u so stupid");
+        openSubState(new EndingSubState(TOO_MANY_PENALTIES));
     }
 
     function startConveyor():Void
@@ -439,7 +459,7 @@ class PlayState extends FlxState
         var speed:Float = distance / 2;
         var duration:Float = distance / speed;
         trace(duration);
-        FlxTween.tween(curFish, {y: -curFish.height}, duration, {onComplete: (_) ->
+        FlxTween.tween(curFish, {y: -curFish.height * 2}, duration, {onComplete: (_) ->
         {
             conveyorSound.fadeOut(0.5, 0, (_) ->
             {
@@ -464,6 +484,7 @@ class PlayState extends FlxState
             else
             {
                 openSubState(new EndingSubState(EVIL));
+                return;
             }
         }
 
@@ -473,8 +494,47 @@ class PlayState extends FlxState
             if (!trashed)
             {   
                 openSubState(new EndingSubState(EXPLODE));
+                return;
             }
         }
+
+        var finalDecision:Bool = true;
+        if (trashed)
+        {
+            trace(finalDecision);
+            if (!curFish.data.evil && !curFish.data.bomb)
+            {
+                // autofail if we trash something that shouldn't have been trashed
+                finalDecision = false;
+            }
+        }
+        else
+        {
+            trace(finalDecision);
+            if (!curFish.data.evil && !curFish.data.bomb)
+            {
+                var passesRequirements:Bool = true;
+                for (que in checklistQuestions)
+                {
+                    if (!(que.inverse ? !que.q.func(curFish.data) : que.q.func(curFish.data)))
+                        passesRequirements = false;
+                }
+
+                var stampAccepted = stampResult();
+                if ((stampAccepted && !passesRequirements) || (!stampAccepted && passesRequirements))
+                    finalDecision = false;
+            }
+        }
+
+        trace(finalDecision);
+
+        FlxTimer.wait(1, () -> 
+        {
+            if (finalDecision)
+                phone.doHappy();
+            else
+                phone.doMad();
+        });
     }
 
     function trash():Void
@@ -492,6 +552,23 @@ class PlayState extends FlxState
     function onIntroComplete():Void 
     {
         startInspection();
+    }
+
+    function stampResult():Bool
+    {
+        if (stampsGood < stampsBad)
+            return false;
+        if (stampsGood > stampsBad)
+            return true;
+
+        // Equal number of stamps
+        // Fuck you, now you get a random result
+        return FlxG.random.bool();
+    }
+
+    function onPhoneSequenceComplete():Void
+    {
+        FlxTimer.wait(2, startInspection);
     }
 
 }
