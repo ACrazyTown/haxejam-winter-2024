@@ -25,6 +25,16 @@ class DocumentViewSubstate extends FlxSubState
 
     var parent:Document;
 
+    final intro:Array<String> = [
+        "Quite a specimen.",
+        "Who lives under a pineapple under the sea? Not this fish.",
+        "Looks fishy.",
+        "My job is to write these info papers. Sorry this text is irrelevant just wanted to say that.",
+        "I don't like this one.",
+        "I like this one.",
+        "Once upon a time there was a fish. This is its info:"
+    ];
+
     public function new(type:DocumentType, parent:Document)
     {
         super();
@@ -56,8 +66,11 @@ class DocumentViewSubstate extends FlxSubState
                 header = new FlxSprite(bg.x + 20, bg.y + 20).loadGraphic("assets/images/ui/fish_info.png");
                 add(header);
 
+                if (PlayState.instance.checklistIntroText == null)
+                    PlayState.instance.checklistIntroText = FlxG.random.int(0, intro.length - 1);
+
                 var fd = PlayState.instance.curFish.data;
-                var text = "Quite a specimen.\n\n";
+                var text = intro[PlayState.instance.checklistIntroText] + "\n\n";
                 text += 'It is a ${fd.kind.formatted()} originating from the ${fd.location}.\n';
                 text += 'Estimated to be around ${fd.age} days old.';
 

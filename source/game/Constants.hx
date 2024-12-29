@@ -106,7 +106,7 @@ class Constants
         }
     ];
 
-    public static var QUESTIONS_DECORATION:Array<ChecklistQuestion> =
+    public static var QUESTIONS_MISC:Array<ChecklistQuestion> =
     [
         {
             title: "Does the fish have a decoration?",
@@ -117,6 +117,16 @@ class Constants
             title: "Does the fish have a hat?",
             titleOpposite: "Does the fish not have a hat?",
             func: ChecklistQuestions.hasHat
+        },
+        {
+            title: "Was the fish legally caught?",
+            titleOpposite: "Was the fish ilegally caught?",
+            func: ChecklistQuestions.wasLegallyCaught
+        },
+        {
+            title: "Is the fish poisonous?",
+            titleOpposite: "Is the fish not poisonous?",
+            func: ChecklistQuestions.isPoisonous
         }
     ];
 }

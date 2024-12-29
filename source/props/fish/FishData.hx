@@ -8,25 +8,30 @@ class FishData
 {
     public static function random():FishData
     {
-        // TODO: Change when proper fish assets are in
-        var color = FlxColor.fromHSB(0, 0.65, 0.84);
-        color.hue = FlxG.random.int(0, 359);
-
         var kind = FlxG.random.getObject(Constants.FISH_KINDS);
-        kind = FishKind.BIG;
         var location = FlxG.random.getObject(Constants.FISH_LOCATIONS);
         var age = FlxG.random.int(1, 1000);
         // TODO
         var legal = true;
-        var poisonous = location == FishLocation.NUCLEAR_WASTELAND;
+        if (location == FishLocation.FINDFISH_LAKE && age < 365)
+            legal = false;
+
+        var poisonous = location == FishLocation.NUCLEAR_WASTELAND || kind == FishKind.PUFFER;
         var evil = FlxG.random.bool(5);
         var bomb = FlxG.random.bool(15);
+
+        var color:Null<FlxColor> = null;
+        if (kind != FishKind.SALMON && kind != FishKind.CARDBOARD && !bomb)
+        {
+            color = FlxColor.fromHSB(0, 0.65, 0.84);
+            color.hue = FlxG.random.int(0, 359);
+        }
 
         var data = new FishData(color, kind, location, age, legal, poisonous, evil, bomb);
         return data;
     }
 
-    public var color:FlxColor;
+    public var color:Null<FlxColor>;
     public var kind:FishKind;
     public var location:FishLocation;
     public var age:Int;
@@ -35,7 +40,7 @@ class FishData
     public var evil:Bool;
     public var bomb:Bool;
 
-    public function new(color:FlxColor, kind:FishKind, location:FishLocation, 
+    public function new(color:Null<FlxColor>, kind:FishKind, location:FishLocation, 
         age:Int, legal:Bool, poisonous:Bool, evil:Bool, bomb:Bool)
     {
         this.color = color;
@@ -50,6 +55,6 @@ class FishData
 
     public function toString():String
     {
-        return 'color: ${color.toWebString()} | kind: ${kind} | loc: ${location} | age: ${age} | legal: ${legal} | pois: ${poisonous} | evil: ${evil} | bomb: ${bomb}';
+        return 'color: ${color?.toWebString()} | kind: ${kind} | loc: ${location} | age: ${age} | legal: ${legal} | pois: ${poisonous} | evil: ${evil} | bomb: ${bomb}';
     }
 }

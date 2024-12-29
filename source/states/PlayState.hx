@@ -59,6 +59,7 @@ class PlayState extends FlxState
     var penaltiesReceived:Int;
     var score:Float;
     public var checklistQuestions:Array<ActualQuestionUsedInGame> = [];
+    public var checklistIntroText:Null<Int> = null;
 
     var draggableObjects:Array<IDraggable>;
     public var curHolding:IDraggable;
@@ -109,12 +110,12 @@ class PlayState extends FlxState
         plateArea.alpha = 0;
         add(plateArea);
 
-        conveyorArea = new FlxSprite(0, 0).makeGraphic(180, 500, FlxColor.WHITE);
+        conveyorArea = new FlxSprite(0, 0).makeGraphic(160, 500, FlxColor.WHITE);
         conveyorArea.x = FlxG.width - conveyorArea.width;
         conveyorArea.alpha = 0;
         add(conveyorArea);
 
-        trashArea = new FlxSprite(conveyorArea.x, conveyorArea.height).makeGraphic(180, 220);
+        trashArea = new FlxSprite(conveyorArea.x, conveyorArea.height).makeGraphic(160, 220);
         trashArea.alpha = 0;
         add(trashArea);
 

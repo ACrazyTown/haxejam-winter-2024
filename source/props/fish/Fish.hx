@@ -55,6 +55,11 @@ class Fish extends FlxSpriteContainer implements IDraggable
 
         // fish.loadGraphic("assets/images/fish/tempfish.png");
         var path = 'assets/images/fish/${data.kind}.png';
+        if (data.bomb)
+            path = 'assets/images/fish/bomb.png';
+        if (data.evil)
+            path = 'assets/images/fish/evil.png';
+
         if (!FlxG.assets.exists(path))
             fish.loadGraphic("assets/images/fish/tempfish.png");
         else
@@ -72,9 +77,16 @@ class Fish extends FlxSpriteContainer implements IDraggable
         createMask();
         applyMask();
 
-        // Always force hue 0 (red) on evil fish
-        fishShader.hue = data.evil ? 0 : data.color.hue;
-        pickupSound = data.kind == CAT ? "assets/sounds/meow" : null;
+        if (data.color == null)
+            fishShader.enabled = false;
+        else
+        {
+            fishShader.enabled = true;
+            // Always force hue 0 (red) on evil fish
+            fishShader.hue = data.evil ? 0 : data.color.hue;
+        }
+        
+        pickupSound = data.kind == CAT ? "assets/sounds/meow" : "assets/sounds/fish";
 
         recalcOffset();
     }
