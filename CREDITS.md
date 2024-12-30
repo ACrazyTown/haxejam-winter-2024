@@ -29,6 +29,8 @@ cat meow short by skymary -- https://freesound.org/s/412017/ -- License: Creativ
 
 fish slap ground or snow writhing wet.wav by kyles -- https://freesound.org/s/450830/ -- License: Creative Commons 0
 
+Dog Barking  by nick121087 -- https://freesound.org/s/274471/ -- License: Creative Commons 0
+
 # Fonts
 Overlock -- https://fonts.google.com/specimen/Overlock -- Copyright (c) 2011, Dario Manuel Muhafara -- SIL Open Font License
 
